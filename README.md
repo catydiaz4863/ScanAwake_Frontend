@@ -1,6 +1,9 @@
-# scan_awake
+# SCANAWAKE
 
-A new Flutter project.
+**Creators**
+- Catalina Diaz
+- Dori Gonzales
+- Fabian Gonzalez
 
 ## Getting Started
 

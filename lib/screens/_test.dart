@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scanawake/components/RoundedButton.dart';
 import 'package:scanawake/components/RoundedInput.dart';
+import 'package:scanawake/consts.dart';
 
 /// Test Screen
 /// Simple screen meant for testing assets/components.
@@ -28,6 +30,10 @@ class TestScreen extends StatelessWidget {
                 obscureText: true,
                 txtCtrl: new TextEditingController(),
               )),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: RoundedButton(onPressed: () {}, text: 'Sign In', buttonColor: colorScheme[1],),
+          )
         ],
       ),
     );

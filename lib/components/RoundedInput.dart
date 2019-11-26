@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/consts.dart';
 
+// TODO: Remove splash animation on focus/click...
+
 /// Stylized app input wrapped around a TextField.
 ///
 /// ```dart

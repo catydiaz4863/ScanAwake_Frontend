@@ -30,7 +30,7 @@ class RoundedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: width != null ? width : MediaQuery.of(context).size.width,
+        width: width ?? MediaQuery.of(context).size.width,
         child: FlatButton(
           focusNode: focusNode,
           shape: RoundedRectangleBorder(
@@ -38,11 +38,11 @@ class RoundedButton extends StatelessWidget {
           padding: EdgeInsets.all(12),
           onPressed: onPressed,
           disabledColor: primaryGrey,
-          color: buttonColor != null ? buttonColor : primaryBlue,
+          color: buttonColor ?? primaryBlue,
           child: Text(
             text,
             style: boldText.apply(
-                color: textColor != null ? textColor : colorScheme[0]),
+                color: textColor ?? colorScheme[0]),
           ),
         ));
   }

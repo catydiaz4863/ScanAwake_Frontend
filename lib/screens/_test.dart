@@ -13,7 +13,6 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFFFFB7D5),
       child: Container(
               margin: EdgeInsets.symmetric(horizontal: 25),
         child: Column(
@@ -22,11 +21,11 @@ class TestScreen extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AlarmCard(),
+              child: AlarmCard(daysEnabled: [false, false, true, false, true, false, false],),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AlarmCard(),
+              child: AlarmCard(accentColor: primaryPurple, daysEnabled: [false, true, true, true, true, true, false],),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),

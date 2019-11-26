@@ -26,6 +26,11 @@ class AddAlarmCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double _scrWidth = MediaQuery.of(context).size.width;
+    double _scrHeight = MediaQuery.of(context).size.height;
+    double _bound = 132/323;
+    Color _buttonColor = buttonColor ?? colorScheme[3];
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
@@ -34,19 +39,13 @@ class AddAlarmCard extends StatelessWidget {
             : colorScheme[0].withOpacity(.7),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
-      height: height != null
-          ? height
-          : (MediaQuery.of(context).size.width <
-                  MediaQuery.of(context).size.height)
-              ? MediaQuery.of(context).size.width * (132 / 323)
-              : MediaQuery.of(context).size.height * (132 / 323),
-      width:
-          MediaQuery.of(context).size.width < MediaQuery.of(context).size.height
-              ? MediaQuery.of(context).size.width
-              : MediaQuery.of(context).size.height,
+      height: height ?? (_scrWidth < _scrHeight)
+          ? _scrWidth * _bound
+          : _scrHeight * _bound,
+      width: _scrWidth < _scrHeight ? _scrWidth : _scrHeight,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Expanded(
             child: Text(
@@ -64,16 +63,14 @@ class AddAlarmCard extends StatelessWidget {
               child: needPremium
                   ? Icon(Icons.chevron_right,
                       size: 52.5,
-                      color: buttonColor != null ? buttonColor : colorScheme[3])
+                      color: _buttonColor)
                   : Text('+',
                       textAlign: TextAlign.center,
                       style: new TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 52.5,
                           fontStyle: FontStyle.normal,
-                          color: buttonColor != null
-                              ? buttonColor
-                              : colorScheme[3])),
+                          color: _buttonColor)),
             ),
             onTap: () => onPressed(),
           ),

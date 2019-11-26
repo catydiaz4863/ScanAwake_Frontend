@@ -4,6 +4,11 @@ import 'package:scanawake/consts.dart';
 // TODO: Add/Enable splashEffect/touch feedback on InkWell.
 // NOTE: Using InkWell instead of Flat/MaterialButton due to phantom padding messing with it.
 
+/// Card for adding alarms
+///
+/// ```dart
+/// AddAlarmCard(onPressed: () {}, needPremium: true)
+/// ```
 class AddAlarmCard extends StatelessWidget {
   const AddAlarmCard(
       {Key key,
@@ -11,11 +16,13 @@ class AddAlarmCard extends StatelessWidget {
       this.buttonColor,
       this.backgroundColor,
       this.borderRadius = 30.0,
-      this.onPressed})
+      this.onPressed,
+      this.needPremium = false})
       : super(key: key);
   final double height, borderRadius;
   final Color buttonColor, backgroundColor;
   final Function onPressed;
+  final bool needPremium;
 
   @override
   Widget build(BuildContext context) {
@@ -39,23 +46,34 @@ class AddAlarmCard extends StatelessWidget {
               : MediaQuery.of(context).size.height,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Text(
-            'Add New Alarm',
-            style: smSectionText.apply(color: primaryGrey),
+          Expanded(
+            child: Text(
+              needPremium
+                  ? 'Join Premium To Add More Alarms!'
+                  : 'Add New Alarm',
+              style: needPremium
+                  ? smSectionText.apply(color: colorScheme[4])
+                  : smSectionText.apply(color: primaryGrey),
+            ),
           ),
           InkWell(
             child: Padding(
               padding: EdgeInsets.all(2.5),
-              child: Text('+',
-                  textAlign: TextAlign.center,
-                  style: new TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 52.5,
-                      fontStyle: FontStyle.normal,
-                      color:
-                          buttonColor != null ? buttonColor : colorScheme[3])),
+              child: needPremium
+                  ? Icon(Icons.chevron_right,
+                      size: 52.5,
+                      color: buttonColor != null ? buttonColor : colorScheme[3])
+                  : Text('+',
+                      textAlign: TextAlign.center,
+                      style: new TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 52.5,
+                          fontStyle: FontStyle.normal,
+                          color: buttonColor != null
+                              ? buttonColor
+                              : colorScheme[3])),
             ),
             onTap: () => onPressed(),
           ),

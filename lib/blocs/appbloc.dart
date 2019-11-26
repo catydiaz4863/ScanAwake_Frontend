@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
-import 'package:instagram_clone/models/user.dart';
+import 'package:scanawake/models/user.dart';
 
 class AppBloc extends ChangeNotifier {
   bool isReady = false;

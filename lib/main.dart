@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/blocs/appbloc.dart';
-import 'package:instagram_clone/screens/loadingscreen.dart';
+import 'package:scanawake/blocs/appbloc.dart';
+import 'package:scanawake/screens/loadingscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/loginscreen.dart';
 import 'screens/mainscreen.dart';
+import 'screens/_test.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,14 +13,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = AppBloc();
-    return ChangeNotifierProvider(builder: (_) => bloc,
-    child: MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ChangeNotifierProvider(
+      builder: (_) => bloc,
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: SetupWidget(),
       ),
-      home: SetupWidget(),
-    ),);
+    );
   }
 }
 
@@ -31,18 +34,28 @@ class SetupWidget extends StatefulWidget {
 }
 
 class _SetupWidgetState extends State<SetupWidget> {
+  Widget _buildScreen(AppBloc bloc) {
+    /* Testing Componenets/Asset Purposes */
+    return TestScreen();
+
+    if (bloc.isLoggedIn) {
+      if (bloc.isReady) {
+        return MainScreen();
+      } else {
+        return LoadingScreen();
+      }
+    } else {
+      return LoginScreen();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
-    
-    if(bloc.isLoggedIn){
-      if(bloc.isReady){
-        return MainScreen();
-      }else{
-        return LoadingScreen();
-      }
-    }else{
-      return LoginScreen();
-    }
+
+    return Scaffold(
+        body: SafeArea(
+      child: _buildScreen(bloc),
+    ));
   }
 }

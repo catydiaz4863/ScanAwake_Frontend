@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:instagram_clone/blocs/appbloc.dart';
+import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {

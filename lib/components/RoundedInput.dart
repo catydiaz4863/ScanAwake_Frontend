@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/consts.dart';
 
-/// Stylized app input wrapped around TextField
+/// Stylized app input wrapped around a TextField.
 ///
 /// ```dart
 /// RoundedInput(textController: passwdController, obscureText: true, hintText: 'Enter password...', width: MediaQuery.of(context).size.width * 0.75)
@@ -32,8 +32,8 @@ class RoundedInput extends StatelessWidget {
         child: TextField(
           autocorrect: false,
           decoration: new InputDecoration(
-            fillColor: colorScheme[0],
-            filled: true,
+              fillColor: colorScheme[0],
+              filled: true,
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 22, vertical: 13.5),
               border: OutlineInputBorder(
@@ -60,10 +60,11 @@ class RoundedInput extends StatelessWidget {
               ),
               hintText: hintText,
               hintStyle: subtleText.apply(color: Color(0xFF848484))),
-              cursorColor: colorScheme[4],
-              cursorRadius: Radius.circular(borderRadius),
+          cursorColor: colorScheme[4],
+          cursorRadius: Radius.circular(borderRadius),
           controller: txtCtrl,
           obscureText: obscureText,
+          style: subtleText.apply(fontSizeFactor: 1.1),
         ));
   }
 }

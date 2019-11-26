@@ -61,7 +61,7 @@ class RoundedInput extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               hintText: hintText,
-              hintStyle: subtleText.apply(color: Color(0xFF848484))),
+              hintStyle: subtleText.apply(color: primaryGrey)),
           cursorColor: colorScheme[4],
           cursorRadius: Radius.circular(borderRadius),
           controller: txtCtrl,

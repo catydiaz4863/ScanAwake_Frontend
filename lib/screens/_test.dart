@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scanawake/components/AddAlarmCard.dart';
+import 'package:scanawake/components/AlarmCard.dart';
 import 'package:scanawake/components/RoundedButton.dart';
 import 'package:scanawake/components/RoundedInput.dart';
 import 'package:scanawake/consts.dart';
@@ -11,30 +13,27 @@ class TestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: RoundedInput(
-              hintText: 'Enter your email',
-              txtCtrl: new TextEditingController(),
+      color: Color(0xFFFFB7D5),
+      child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AlarmCard(),
             ),
-          ),
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: RoundedInput(
-                hintText: 'Password',
-                obscureText: true,
-                txtCtrl: new TextEditingController(),
-              )),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: RoundedButton(onPressed: () {}, text: 'Sign In', buttonColor: colorScheme[1],),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AlarmCard(),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AddAlarmCard(onPressed: () {},),
+            ),
+          ],
+        ),
       ),
     );
   }

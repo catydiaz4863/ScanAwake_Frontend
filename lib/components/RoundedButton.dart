@@ -37,8 +37,8 @@ class RoundedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(borderRadius)),
           padding: EdgeInsets.all(12),
           onPressed: onPressed,
-          disabledColor: Colors.grey,
-          color: buttonColor != null ? buttonColor : const Color(0xFF0085FF),
+          disabledColor: primaryGrey,
+          color: buttonColor != null ? buttonColor : primaryBlue,
           child: Text(
             text,
             style: boldText.apply(

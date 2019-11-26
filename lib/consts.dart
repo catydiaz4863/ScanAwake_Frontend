@@ -14,8 +14,12 @@ const List<Color> colorScheme = [
   const Color(0xFF000000),
 ];
 
+const Color primaryGrey = const Color(0xFF7F7F7F);
+const Color primaryBlue = const Color(0xFF0085FF);
+
 // TextStyles
 const TextStyle titleText = const TextStyle(fontSize: 64, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold);
+const TextStyle smSectionText = const TextStyle(fontSize: 30, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold);
 const TextStyle sectionText = const TextStyle(fontSize: 36, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold);
 const TextStyle subtleText = const TextStyle(fontSize: 14, fontStyle: FontStyle.normal, fontWeight: FontWeight.w300);
 const TextStyle boldText = const TextStyle(fontSize: 18, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold);

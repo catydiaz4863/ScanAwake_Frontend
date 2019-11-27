@@ -3,7 +3,7 @@ import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:android_alarm_manager/android_alarm_manager.dart';
-
+import 'package:audioplayers/audioplayers.dart';
 
 class TestAlarmScreen extends StatefulWidget {
   @override
@@ -15,35 +15,35 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
     DateTime current;
+    AudioPlayer audioPlayer = AudioPlayer();
+
     return Scaffold(
         appBar: AppBar(
           title: Text("ScanAwake"),
         ),
         body: Column(
           children: <Widget>[
-            Text("testing sound control"),
+            Text("testing sound control with audioplayer plugin"),
             RaisedButton(
                 child: Text("on"),
                 onPressed: () async {
-                  //       current = DateTime.now().toUtc().add(Duration(seconds: 5));
-                  //        await Future.delayed(Duration(seconds: 5));
                   print("playing sound");
 
-                  FlutterRingtonePlayer.play(
+                  audioPlayer.setVolume(0.1);
+                  audioPlayer.play(
+                      "https://cdns-preview-1.dzcdn.net/stream/c-1a9a5cc4dd27f2000a77ea788a041f34-6.mp3");
+                  /*     FlutterRingtonePlayer.play(
                     android: AndroidSounds.alarm,
                     ios: IosSounds.alarm,
                     looping: true,
                     volume: 1,
-                  );
-                  //           if (DateTime.now() == current) {
-                  //       FlutterRingtonePlayer.playAlarm(volume: 0.5);
-                  //           }
+                  ); */
                 }),
             RaisedButton(
               onPressed: () {
                 print("stopping sound");
-
-                FlutterRingtonePlayer.stop();
+                audioPlayer.stop();
+                //       FlutterRingtonePlayer.stop();
               },
               child: Text("off"),
             )

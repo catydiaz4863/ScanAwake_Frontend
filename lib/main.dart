@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:scanawake/screens/loadingscreen.dart';
 import 'package:provider/provider.dart';
+import 'package:scanawake/screens/testalarm.dart';
 import 'screens/loginscreen.dart';
 import 'screens/mainscreen.dart';
 import 'screens/_test.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(elevation: 0),
           primarySwatch: Colors.blue,
         ),
-        home: SetupWidget(),
+        home: TestAlarmScreen(),
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -16,20 +18,23 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: implement initState
     super.initState();
 
-    _widgetOptions = <Widget>[
-
-    ];
+    _widgetOptions = <Widget>[];
   }
 
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
+    DateTime current;
 
-    // TODO: Decide on using BottomAppBar or just straight to home.
-    // Mainly beacuse we're not using our own backend meaning no reason for profile, so I don't know
-    //  about needing only a 1 or 2-button appbar.
     return Scaffold(
-    body: SafeArea(child: Container(),)
-    );
+        appBar: AppBar(
+          title: Text("ScanAwake"),
+        ),
+        body: SafeArea(
+            child: Column(
+          children: <Widget>[
+            Text("empty screen"),
+          ],
+        )));
   }
 }

@@ -16,9 +16,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       builder: (_) => bloc,
       child: MaterialApp(
-        // showSemanticsDebugger: false,
+        showSemanticsDebugger: false,
         title: 'Flutter Demo',
         theme: ThemeData(
+          appBarTheme: AppBarTheme(elevation: 0),
           primarySwatch: Colors.blue,
         ),
         home: SetupWidget(),
@@ -38,6 +39,7 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
     return TestScreen();
+    //return MainScreen();
 
     if (bloc.isLoggedIn) {
       if (bloc.isReady) {
@@ -54,9 +56,6 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
-    return Scaffold(
-        body: SafeArea(
-      child: _buildScreen(bloc),
-    ));
+    return  _buildScreen(bloc);
   }
 }

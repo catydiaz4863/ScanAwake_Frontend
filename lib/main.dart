@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
+import 'package:scanawake/screens/_test2.dart';
 import 'package:scanawake/screens/loadingscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/loginscreen.dart';
@@ -37,6 +38,7 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
     return TestScreen();
+    //return TestScreen2();
 
     if (bloc.isLoggedIn) {
       if (bloc.isReady) {
@@ -54,8 +56,11 @@ class _SetupWidgetState extends State<SetupWidget> {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
     return Scaffold(
-        body: SafeArea(
+       body: SafeArea(
       child: _buildScreen(bloc),
-    ));
+    ),
+
+    //body: MainScreen(),
+    );
   }
 }

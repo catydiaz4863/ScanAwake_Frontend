@@ -12,9 +12,15 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
-    return Scaffold(appBar: AppBar(title: Text("ScanAwake"),),
-    body:
-          Text("empty")
+    return Scaffold(
+    body: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+       //its going to return alarm cards
+       
+      ],
+    )
+          
     );
   }
 }

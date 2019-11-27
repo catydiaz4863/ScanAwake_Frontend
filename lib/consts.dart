@@ -12,6 +12,7 @@ const List<Color> colorScheme = [
   const Color(0xFF7D88BD),
   const Color(0xFF424E8B),
   const Color(0xFF000000),
+  const Color(0xFF979797),
 ];
 
 // TextStyles

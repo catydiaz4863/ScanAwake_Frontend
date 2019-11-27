@@ -14,19 +14,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
-<<<<<<< HEAD
-
-    return Scaffold(
-    body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-       //its going to return alarm cards
-       
-      ],
-    )
-          
-    );
-=======
     DateTime current;
     return Scaffold(
         appBar: AppBar(
@@ -38,6 +25,5 @@ class _MainScreenState extends State<MainScreen> {
             
           ],
         ));
->>>>>>> 228120885e0587fe79a529a13a8755619c6ca08c
   }
 }

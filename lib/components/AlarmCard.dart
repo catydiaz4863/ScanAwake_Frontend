@@ -42,7 +42,7 @@ class AlarmCard extends StatefulWidget {
 }
 
 class _AlarmCardState extends State<AlarmCard> {
-  bool _enabled;
+  bool _enabled, _mainView;
   TimeOfDay _time;
   List<bool> _daysEnabled;
 
@@ -53,6 +53,97 @@ class _AlarmCardState extends State<AlarmCard> {
     _enabled = widget.enabled;
     _time = widget.time == null ? new TimeOfDay.now() : widget.time;
     _daysEnabled = widget.daysEnabled;
+    _mainView = true;
+  }
+
+  Widget frequencySection(Color color) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Seperator(
+            thiccness: .75,
+            color: _enabled ? color : _disabledGrey,
+          ),
+          Container(
+            height: 37.5,
+            child: ListView.builder(
+              physics: new BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.5, vertical: 2),
+                  child: Container(
+                    width: 40,
+                    child: InkWell(
+                        onLongPress: () {
+                          // TODO: Make it reflect changes on whatever we store it in. (Not just visually)
+
+                          setState(() {
+                            _daysEnabled[index] = !_daysEnabled[index];
+                          });
+
+                          Fluttertoast.showToast(
+                              msg:
+                                  "${_daysEnabled[index] ? 'Enabled' : 'Disabled'} alarm's ${days[index].last} repeat.",
+                              fontSize: 14.5,
+                              timeInSecForIos: 1,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: color,
+                              textColor: colorScheme[0]);
+                        },
+                        child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              days[index].first,
+                              textAlign: TextAlign.center,
+                              style: subtleText.apply(
+                                  fontWeightDelta: _daysEnabled[index] ? 2 : 1,
+                                  color: _enabled
+                                      ? (_daysEnabled[index]
+                                          ? color
+                                          : _disabledGrey)
+                                      : (_daysEnabled[index]
+                                          ? primaryGrey.withOpacity(.7)
+                                          : _disabledGrey.withOpacity(.6))),
+                            ))),
+                  ),
+                );
+              },
+              itemCount: 7,
+              scrollDirection: Axis.horizontal,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget timeSection(Color color) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Text(
+          '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
+          style: sectionText.apply(
+              color: _enabled ? colorScheme[6] : _disabledGrey),
+        ),
+        Transform.scale(
+          scale: 1.3,
+          child: Switch(
+            onChanged: (v) {
+              // TODO: Change enabled on device
+              setState(() {
+                _enabled = v;
+              });
+            },
+            value: _enabled,
+            activeColor: color,
+          ),
+        ),
+      ],
+    );
   }
 
   double _bound = 132 / 323;
@@ -67,7 +158,7 @@ class _AlarmCardState extends State<AlarmCard> {
 
     return GestureDetector(
         onLongPress: () {
-          // TODO: Go to edit screen.
+          // TODO: Go to Main Edit screen.
         },
         child: Container(
           decoration: BoxDecoration(
@@ -89,97 +180,10 @@ class _AlarmCardState extends State<AlarmCard> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Text(
-                        '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
-                        style: sectionText.apply(
-                            color: _enabled ? colorScheme[6] : _disabledGrey),
-                      ),
-                      Transform.scale(
-                        scale: 1.3,
-                        child: Switch(
-                          onChanged: (v) {
-                            // TODO: Change enabled on device
-                            setState(() {
-                              _enabled = v;
-                            });
-                          },
-                          value: _enabled,
-                          activeColor: _accentColor,
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: timeSection(_accentColor),
                 ),
               ),
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    Seperator(
-                      thiccness: .75,
-                      color: _enabled ? _accentColor : _disabledGrey,
-                    ),
-                    Container(
-                      height: 37.5,
-                      child: ListView.builder(
-                        physics: new BouncingScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 2.5, vertical: 2),
-                            child: Container(
-                              width: 40,
-                              child: InkWell(
-                                  onLongPress: () {
-                                    // TODO: Make it reflect changes on whatever we store it in. (Not just visually)
-
-                                    setState(() {
-                                      _daysEnabled[index] =
-                                          !_daysEnabled[index];
-                                    });
-
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "${_daysEnabled[index] ? 'Enabled' : 'Disabled'} alarm's ${days[index].last} repeat.",
-                                        fontSize: 14.5,
-                                        timeInSecForIos: 1,
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        backgroundColor: _accentColor,
-                                        textColor: colorScheme[0]);
-                                  },
-                                  child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        days[index].first,
-                                        textAlign: TextAlign.center,
-                                        style: subtleText.apply(
-                                            fontWeightDelta:
-                                                _daysEnabled[index] ? 2 : 1,
-                                            color: _enabled
-                                                ? (_daysEnabled[index]
-                                                    ? _accentColor
-                                                    : _disabledGrey)
-                                                : (_daysEnabled[index]
-                                                    ? primaryGrey
-                                                        .withOpacity(.7)
-                                                    : _disabledGrey
-                                                        .withOpacity(.6))),
-                                      ))),
-                            ),
-                          );
-                        },
-                        itemCount: 7,
-                        scrollDirection: Axis.horizontal,
-                      ),
-                    )
-                  ],
-                ),
-              )
+              frequencySection(_accentColor),
             ],
           ),
         ));

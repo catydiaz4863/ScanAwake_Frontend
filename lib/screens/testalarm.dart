@@ -15,7 +15,8 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
     DateTime current;
-    AudioPlayer audioPlayer = AudioPlayer();
+    AudioPlayer audioPlayer = new AudioPlayer();
+
 
     return Scaffold(
         appBar: AppBar(
@@ -31,7 +32,7 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
 
                   audioPlayer.setVolume(0.1);
                   audioPlayer.play(
-                      "https://cdns-preview-1.dzcdn.net/stream/c-1a9a5cc4dd27f2000a77ea788a041f34-6.mp3");
+                      "https://cdns-preview-6.dzcdn.net/stream/c-6f19a7e44697f2ba83240fa0620d5e0a-6.mp3");
                   /*     FlutterRingtonePlayer.play(
                     android: AndroidSounds.alarm,
                     ios: IosSounds.alarm,

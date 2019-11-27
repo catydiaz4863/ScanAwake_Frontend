@@ -1,20 +1,32 @@
 PODS:
+  - android_alarm_manager (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_ringtone_player (0.0.1):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - android_alarm_manager (from `.symlinks/plugins/android_alarm_manager/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
 
 EXTERNAL SOURCES:
+  android_alarm_manager:
+    :path: ".symlinks/plugins/android_alarm_manager/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_ringtone_player:
+    :path: ".symlinks/plugins/flutter_ringtone_player/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
+  android_alarm_manager: 71b3c5bf9590c806be2218c090b4d03aa3a22af6
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
 
 PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5

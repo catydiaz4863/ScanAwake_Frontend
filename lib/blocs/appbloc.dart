@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'dart:convert';
 import 'package:scanawake/models/user.dart';
 
@@ -51,9 +50,9 @@ class AppBloc extends ChangeNotifier {
 
   Future<void> attemptLogin(String username, String password) async {
     print(
-        "attempting login https://nameless-escarpment-45560.herokuapp.com/api/login?username=${username}&password=${password}");
+        "attempting login https://nameless-escarpment-45560.herokuapp.com/api/login?username=$username&password=$password");
     var response = await http.get(
-        "https://nameless-escarpment-45560.herokuapp.com/api/login?username=${username}&password=${password}");
+        "https://nameless-escarpment-45560.herokuapp.com/api/login?username=$username&password=$password");
     if (response.statusCode == 200) {
       print("succeeded login");
       didLoginFail = false;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
-import 'package:scanawake/screens/_test2.dart';
 import 'package:scanawake/screens/loadingscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/loginscreen.dart';
@@ -17,8 +16,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       builder: (_) => bloc,
       child: MaterialApp(
+        showSemanticsDebugger: false,
         title: 'Flutter Demo',
         theme: ThemeData(
+          appBarTheme: AppBarTheme(elevation: 0),
           primarySwatch: Colors.blue,
         ),
         home: SetupWidget(),
@@ -37,9 +38,9 @@ class SetupWidget extends StatefulWidget {
 class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
-    //return TestScreen();
-    //return TestScreen2();
-    return MainScreen();
+    return TestScreen();
+    //return MainScreen();
+
     if (bloc.isLoggedIn) {
       if (bloc.isReady) {
         return MainScreen();
@@ -55,12 +56,6 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
-    return Scaffold(
-       body: SafeArea(
-      child: _buildScreen(bloc),
-    ),
-
-    //body: MainScreen(),
-    );
+    return  _buildScreen(bloc);
   }
 }

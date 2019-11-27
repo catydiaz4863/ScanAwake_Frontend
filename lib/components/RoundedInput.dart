@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/consts.dart';
 
+// TODO: Remove splash animation on focus/click...
+
 /// Stylized app input wrapped around a TextField.
 ///
 /// ```dart
@@ -59,7 +61,7 @@ class RoundedInput extends StatelessWidget {
                 borderRadius: BorderRadius.circular(borderRadius),
               ),
               hintText: hintText,
-              hintStyle: subtleText.apply(color: Color(0xFF848484))),
+              hintStyle: subtleText.apply(color: primaryGrey)),
           cursorColor: colorScheme[4],
           cursorRadius: Radius.circular(borderRadius),
           controller: txtCtrl,

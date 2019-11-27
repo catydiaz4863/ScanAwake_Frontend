@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scanawake/components/AddAlarmCard.dart';
+import 'package:scanawake/components/AlarmCard.dart';
+import 'package:scanawake/components/RoundedButton.dart';
 import 'package:scanawake/components/RoundedInput.dart';
+import 'package:scanawake/consts.dart';
 
 /// Test Screen
 /// Simple screen meant for testing assets/components.
@@ -8,28 +12,36 @@ class TestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: RoundedInput(
-              hintText: 'Enter your email',
-              txtCtrl: new TextEditingController(),
+    return Scaffold(
+        body: Container(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AlarmCard(
+                daysEnabled: [false, false, true, false, true, false, false],
+              ),
             ),
-          ),
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: RoundedInput(
-                hintText: 'Password',
-                obscureText: true,
-                txtCtrl: new TextEditingController(),
-              )),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AlarmCard(
+                accentColor: primaryPurple,
+                daysEnabled: [false, true, true, true, true, true, false],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: AddAlarmCard(
+                onPressed: () {},
+              ),
+            ),
+          ],
+        ),
       ),
-    );
+    ));
   }
 }

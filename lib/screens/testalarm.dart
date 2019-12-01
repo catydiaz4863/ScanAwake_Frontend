@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:volume/volume.dart';
 
 class TestAlarmScreen extends StatefulWidget {
   @override
@@ -11,18 +11,44 @@ class TestAlarmScreen extends StatefulWidget {
 }
 
 class _TestAlarmScreenState extends State<TestAlarmScreen> {
+  AudioPlayer audioPlayer;
+  int maxVol;
+
+  @override
+  void initState() async {
+    super.initState();
+    audioPlayer = AudioPlayer();
+    maxVol = await Volume.getMaxVol;
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    // pass any stream as parameter as per requirement
+    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
+  }
+
+/*
+ setVol(int i) async {
+    await Volume.setVol(i);
+  }*/
+
+  @override
+  void dispose() {
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
     DateTime current;
-    AudioPlayer audioPlayer = new AudioPlayer();
-
-
     return Scaffold(
         appBar: AppBar(
           title: Text("ScanAwake"),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("testing sound control with audioplayer plugin"),
             RaisedButton(
@@ -30,21 +56,35 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
                 onPressed: () async {
                   print("playing sound");
 
-                  audioPlayer.setVolume(0.1);
+                  //         setVol(maxVol);
+                  audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+                  audioPlayer.setVolume(2.0);
                   audioPlayer.play(
                       "https://cdns-preview-6.dzcdn.net/stream/c-6f19a7e44697f2ba83240fa0620d5e0a-6.mp3");
-                  /*     FlutterRingtonePlayer.play(
-                    android: AndroidSounds.alarm,
-                    ios: IosSounds.alarm,
-                    looping: true,
-                    volume: 1,
-                  ); */
                 }),
             RaisedButton(
               onPressed: () {
                 print("stopping sound");
                 audioPlayer.stop();
-                //       FlutterRingtonePlayer.stop();
+              },
+              child: Text("off"),
+            ),
+            Text("testing sound control with flutter ringtone player plugin"),
+            RaisedButton(
+                child: Text("on"),
+                onPressed: () async {
+                  print("playing sound");
+                  FlutterRingtonePlayer.play(
+                    android: AndroidSounds.alarm,
+                    ios: IosSounds.alarm,
+                    looping: true,
+                    volume: 1,
+                  );
+                }),
+            RaisedButton(
+              onPressed: () {
+                print("stopping sound");
+                FlutterRingtonePlayer.stop();
               },
               child: Text("off"),
             )

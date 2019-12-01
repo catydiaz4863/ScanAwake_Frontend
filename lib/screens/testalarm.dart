@@ -51,23 +51,81 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text("testing sound control with audioplayer plugin"),
-            RaisedButton(
-                child: Text("on"),
-                onPressed: () async {
-                  print("playing sound");
+            Text("Example #1 : George Strait"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                // https://cdns-preview-1.dzcdn.net/stream/c-1cdfe90120447061efa70135a552152c-10.mp3
+                RaisedButton(
+                    child: Text("on"),
+                    onPressed: () async {
+                      print("playing sound");
 
-                  //         setVol(maxVol);
-                  audioPlayer.setReleaseMode(ReleaseMode.LOOP);
-                  audioPlayer.setVolume(2.0);
-                  audioPlayer.play(
-                      "https://cdns-preview-6.dzcdn.net/stream/c-6f19a7e44697f2ba83240fa0620d5e0a-6.mp3");
-                }),
-            RaisedButton(
-              onPressed: () {
-                print("stopping sound");
-                audioPlayer.stop();
-              },
-              child: Text("off"),
+                      //         setVol(maxVol);
+                      audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+                      audioPlayer.setVolume(2.0);
+                      audioPlayer.play(
+                          "https://cdns-preview-6.dzcdn.net/stream/c-6f19a7e44697f2ba83240fa0620d5e0a-6.mp3");
+                    }),
+                RaisedButton(
+                  onPressed: () {
+                    print("stopping sound");
+                    audioPlayer.stop();
+                  },
+                  child: Text("off"),
+                ),
+              ],
+            ),
+            Text("Example #2 : GoT theme song"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                    child: Text("on"),
+                    onPressed: () async {
+                      print("playing sound");
+
+                      //         setVol(maxVol);
+                      audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+                      audioPlayer.setVolume(2.0);
+                      audioPlayer.play(
+                          "https://cdns-preview-0.dzcdn.net/stream/c-08c6521daf18d7fc58234a4b2602d1ff-4.mp3");
+                    }),
+                RaisedButton(
+                  onPressed: () {
+                    print("stopping sound");
+                    audioPlayer.stop();
+                  },
+                  child: Text("off"),
+                ),
+              ],
+            ),
+            Text("Example #3 : Linkin Park"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                    child: Text("on"),
+                    onPressed: () async {
+                      print("playing sound");
+
+                      //         setVol(maxVol);
+                      audioPlayer.setReleaseMode(ReleaseMode.LOOP);
+                      audioPlayer.setVolume(2.0);
+                      audioPlayer.play(
+                          "https://cdns-preview-1.dzcdn.net/stream/c-1cdfe90120447061efa70135a552152c-10.mp3");
+                    }),
+                RaisedButton(
+                  onPressed: () {
+                    print("stopping sound");
+                    audioPlayer.stop();
+                  },
+                  child: Text("off"),
+                ),
+              ],
             ),
             Text("testing sound control with flutter ringtone player plugin"),
             RaisedButton(

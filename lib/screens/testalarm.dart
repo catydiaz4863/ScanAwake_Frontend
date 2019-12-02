@@ -15,11 +15,11 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
   int maxVol;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     audioPlayer = AudioPlayer();
-    maxVol = await Volume.getMaxVol;
-    initPlatformState();
+  //  maxVol = await Volume.getMaxVol;
+  //  initPlatformState();
   }
 
   Future<void> initPlatformState() async {

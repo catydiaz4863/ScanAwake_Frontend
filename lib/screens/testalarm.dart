@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:android_alarm_manager/android_alarm_manager.dart';
 
 
 class TestAlarmScreen extends StatefulWidget {

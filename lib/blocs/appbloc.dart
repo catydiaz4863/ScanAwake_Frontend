@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:scanawake/models/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -11,12 +14,28 @@ class AppBloc extends ChangeNotifier {
   bool didLoadFail = false;
   User myAccount;
   String token;
+  String chosenTitle = "default";
+  String chosenURL = "";
+  List<String> titles = List<String>();
+  List<String> urls = List<String>();
+  String deezerKEY = "3b40ebf5a48debdd33cf1e497c9025df";
+  String deezerID = "382824";
 
-/*
-  AppBloc() {
-    setup();
+  List<Alarm> alarms;
+
+AppBloc() {
+    //setup();
+    alarms = [];
+    //load from saved stuff
+    notifyListeners();
   }
 
+  void addAlarm(Alarm a){
+    alarms.add(a);
+    notifyListeners();
+  }
+
+/*
 
   Future<void> setup() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -77,6 +96,27 @@ class AppBloc extends ChangeNotifier {
     await prefs.remove("token");
     isLoggedIn = false;
     notifyListeners();
+  }
+
+  Future<bool> searchAudio(String keyword) async {
+    titles.clear();
+    urls.clear();
+    var response = await http.get("https://api.deezer.com/search?q=$keyword",
+        headers: {'secret_key': "$deezerKEY", 'app_id': "$deezerID"});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsondata = json.decode(response.body);
+      for (int i = 0; i < jsondata["data"].length; i++)
+      {
+        
+        print(jsondata["data"][i]["title"]);
+        print(jsondata["data"][i]["preview"]);
+        titles.add(jsondata["data"][i]["title"].toString());
+        urls.add(jsondata["data"][i]["preview"].toString());
+      }
+      return true;
+    }
+    return false;
   }
 
 /*

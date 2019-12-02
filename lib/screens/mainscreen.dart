@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 class MainScreen extends StatefulWidget {
   @override

@@ -52,7 +52,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/alarm_clock.mp3
+    - assets/mp3/alarm_clock.mp3
 
   # To add assets to your application, add an assets section, like this:
   # assets:

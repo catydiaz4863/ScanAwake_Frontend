@@ -146,10 +146,10 @@ class _TestAlarmScreenState extends State<TestAlarmScreen> {
                       print("playing sound");
 
                       //         setVol(maxVol);
-                      playerCache.load('/mp3/alarm_clock.mp3');
+                      playerCache.load('mp3/alarm_clock.mp3');
 
                       audioPlayer = await playerCache
-                          .loop("/mp3/alarm_clock.mp3", volume: 0.1);
+                          .loop("mp3/alarm_clock.mp3", volume: 0.5);
                     }),
                 RaisedButton(
                   onPressed: () {

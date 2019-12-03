@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
+import 'package:scanawake/models/alarm.dart';
 
 // NOTE: Currently, days are passed in/read as [true, true, false, false, false, true, false] ([Sunday, Monday, Tusday, Wednesday, Thursday, Friday, Saturday])
 

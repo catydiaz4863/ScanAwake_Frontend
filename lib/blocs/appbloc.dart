@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audio_cache.dart';
@@ -7,7 +8,6 @@ import 'package:scanawake/models/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:scanawake/models/user.dart';
 
 class AppBloc extends ChangeNotifier {
   bool isReady = false;
@@ -26,6 +26,10 @@ class AppBloc extends ChangeNotifier {
   String player = "local";
 
   List<Alarm> alarms = List<Alarm>();
+  List<Timer> timers = List<Timer>();
+  List<int> timerIDs = List<int>();
+
+  BuildContext mainContext;
 
   AppBloc() {
     //setup();
@@ -33,10 +37,28 @@ class AppBloc extends ChangeNotifier {
     localCache.load('mp3/alarm_clock.mp3');
 
     //load from saved stuff
+
+    load();
     notifyListeners();
   }
 
+  void load() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int savedNum = prefs.getInt('numAlarms');
+    prefs.clear();
+    if (savedNum != 0 && savedNum != null) {
+      numAlarms = savedNum;
+
+      for (int i = 0; i < savedNum; i++) {
+        String tmp = prefs.getString('$i');
+        Alarm newAlarm = Alarm.fromJson(json.decode(tmp));
+        alarms.add(newAlarm);
+      }
+    }
+  }
+
   void ring(Alarm a) async {
+    
     ringing = true;
     print("playing sound");
     if (a.local)
@@ -48,9 +70,20 @@ class AppBloc extends ChangeNotifier {
     }
   }
 
-  void turnOffAlarm(Alarm a) {
+  void turnOffAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     ringing = false;
     print("turning off alarm");
+
+    // temporary - makes alarm one-time-only
+    prefs.remove('${a.id}');
+    alarms.remove(a);
+    numAlarms--;
+    int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+    timerIDs.remove(a.id);
+    timers.remove(timerIndex);
+    notifyListeners();
 
     if (a.local)
       localPlayer.stop();
@@ -58,9 +91,16 @@ class AppBloc extends ChangeNotifier {
       networkPlayer.stop();
   }
 
-  void addAlarm(Alarm a) {
+  Future addAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     alarms.add(a);
     numAlarms++;
+
+    prefs.setInt('numAlarms', numAlarms);
+    Map<String, dynamic> jsonAlarm = a.toJson();
+
+    prefs.setString('${numAlarms - 1}', json.encode(jsonAlarm));
     notifyListeners();
   }
 

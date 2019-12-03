@@ -12,6 +12,10 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:scanawake/models/alarm.dart';
 
 class CreateBasicAlarm extends StatefulWidget {
+
+  BuildContext mainct;
+  CreateBasicAlarm(this.mainct);
+
   @override
   _CreateBasicAlarmState createState() => _CreateBasicAlarmState();
 }
@@ -69,6 +73,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
     AppBloc bloc = Provider.of<AppBloc>(context);
     bool flag = false;
     TextEditingController searchCtrl = new TextEditingController();
+    BuildContext ct;
 
     return Scaffold(
         body: Column(
@@ -123,12 +128,13 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () async {
-                if (!searchCtrl.text.isEmpty) {
+                if (searchCtrl.text.isNotEmpty) {
                   bool flag = await bloc.searchAudio(searchCtrl.text);
                   if (flag && bloc.titles.length != 0) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SearchPage(searchCtrl.text)),
+                      MaterialPageRoute(
+                          builder: (context) => SearchPage(searchCtrl.text)),
                     );
                   }
                 }
@@ -145,7 +151,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   int d = int.parse(dayCtrl.text);
                   Duration difference = create(h, m, d);
 
-                  int newID = bloc.numAlarms + 1;
+                  int newID = bloc.numAlarms;
                   Alarm a;
                   if (bloc.chosenTitle == "default") {
                     a = new Alarm(
@@ -174,7 +180,9 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   bloc.chosenTitle = "default";
                   setState(() {});
 
-                  Timer(
+                  bloc.timerIDs.add(a.id);
+                  ct = bloc.mainContext;
+                  bloc.timers.add(Timer(
                       Duration(
                           days: difference.inDays,
                           hours: difference.inHours,
@@ -184,9 +192,10 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                     bloc.ring(a);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DisableScreen(a)),
+                      MaterialPageRoute(builder: (ct) => DisableScreen(a)),
                     );
-                  });
+                  }));
+                  Navigator.pop(context);
                 })),
         new Container(
             child: RaisedButton(
@@ -198,7 +207,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
             int d = int.parse(dayCtrl.text);
             Duration difference = create(h, m, d);
 
-            int newID = bloc.numAlarms + 1;
+            int newID = bloc.numAlarms;
             Alarm a;
             if (bloc.chosenTitle == "default") {
               a = new Alarm(
@@ -227,7 +236,10 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
             bloc.chosenTitle = "default";
             setState(() {});
 
-            Timer(
+            bloc.timerIDs.add(a.id);
+            ct = widget.mainct;
+
+            bloc.timers.add(Timer(
                 Duration(
                     days: difference.inDays,
                     hours: difference.inHours,
@@ -235,11 +247,15 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                     seconds: difference.inSeconds), () {
               print("Ring ring $h: $m");
               bloc.ring(a);
-              Navigator.push(
+              /*    Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => DisableScreen(a)),
-              );
-            });
+              ); */
+              Navigator.pushReplacementNamed(ct, DisableScreen.routeName,
+                  arguments: a);
+              //        navigatorKey.currentState.pushNamed('/someRoute');
+            }));
+            Navigator.pop(context);
           },
         )),
       ],

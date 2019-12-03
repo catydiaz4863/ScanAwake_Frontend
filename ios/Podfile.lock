@@ -1,32 +1,51 @@
 PODS:
   - android_alarm_manager (0.0.1):
     - Flutter
+  - barcode_scan (0.0.1):
+    - Flutter
+    - MTBBarcodeScanner
   - Flutter (1.0.0)
   - flutter_ringtone_player (0.0.1):
     - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+  - MTBBarcodeScanner (5.0.11)
   - shared_preferences (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - android_alarm_manager (from `.symlinks/plugins/android_alarm_manager/ios`)
+  - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+
+SPEC REPOS:
+  trunk:
+    - MTBBarcodeScanner
 
 EXTERNAL SOURCES:
   android_alarm_manager:
     :path: ".symlinks/plugins/android_alarm_manager/ios"
+  barcode_scan:
+    :path: ".symlinks/plugins/barcode_scan/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
   flutter_ringtone_player:
     :path: ".symlinks/plugins/flutter_ringtone_player/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
 
 SPEC CHECKSUMS:
   android_alarm_manager: 71b3c5bf9590c806be2218c090b4d03aa3a22af6
+  barcode_scan: 33f586d02270046fc6559135038b34b5754eaa4f
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
+  fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
+  MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
 
 PODFILE CHECKSUM: b6a0a141693093b304368d08511b46cf3d1d0ac5

@@ -40,8 +40,8 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
     //return TestScreen();
-    //return MainScreen();
-return barcodeAlarm();
+    return MainScreen();
+//return barcodeAlarm();
     if (bloc.isLoggedIn) {
       if (bloc.isReady) {
         return MainScreen();

@@ -90,16 +90,14 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     }
   }
 
-  testVolume() async {
-
-  }
+  testVolume() async {}
 
   updateAMPM() async {
-    if(_loopingTime[3]) return;
+    if (_loopingTime[3]) return;
 
     _loopingTime[3] = true;
 
-    while(_updateTime[3]) {
+    while (_updateTime[3]) {
       setState(() {
         _time_edit[3] = _time_edit[3] == 'AM' ? 'PM' : 'AM';
       });
@@ -261,192 +259,181 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_up,
-                        color: color,
-                      ),
-                    ),
-                    onPointerDown: (_) async {
-                      _updateTime[0] = true;
+            IntrinsicWidth(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[0] = true;
 
-                      updateHour(pos: true);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[0] = false;
-                    },
-                  ),
-                ),
-                Container(
-                    child: RichText(
-                      textScaleFactor: 1.075, // ! Scaling up since size seems smaller in RichText...
-                  text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: _time_edit[0] >= 10
-                            ? '${_time_edit[0].toString()[0]} '
-                            : '${_time_edit[0]}',
-                      ),
-                      TextSpan(
-                          text: _time_edit[0] < 10
-                              ? ''
-                              : '${_time_edit[0].toString()[1]}'),
-                    ],
-                    style: sectionText.apply(
-                        color: _enabled ? colorScheme[6] : _disabledGrey),
-                  ),
-                )),
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: color,
-                      ),
+                        updateHour(pos: true);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[0] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_up,
+                          color: color,
+                        ),
+                      )),
+                  Container(
+                      child: RichText(
+                    textScaleFactor:
+                        1.075, // ! Scaling up since size seems smaller in RichText...
+                    text: TextSpan(
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: _time_edit[0] >= 10
+                              ? '${_time_edit[0].toString()[0]} '
+                              : '${_time_edit[0]}',
+                        ),
+                        TextSpan(
+                            text: _time_edit[0] < 10
+                                ? ''
+                                : '${_time_edit[0].toString()[1]}'),
+                      ],
+                      style: sectionText.apply(
+                          color: _enabled ? colorScheme[6] : _disabledGrey),
                     ),
-                    onPointerDown: (_) async {
-                      _updateTime[0] = true;
+                  )),
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[0] = true;
 
-                      updateHour(pos: false);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[0] = false;
-                    },
-                  ),
-                ),
-              ],
+                        updateHour(pos: false);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[0] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: color,
+                        ),
+                      )),
+                ],
+              ),
             ),
             Text(
               ' : ',
               style: sectionText.apply(
                   color: _enabled ? colorScheme[6] : _disabledGrey),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_up,
-                        color: color,
-                      ),
-                    ),
-                    onPointerDown: (_) async {
-                      _updateTime[1] = true;
+            IntrinsicWidth(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[1] = true;
 
-                      updateMinTen(pos: true);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[1] = false;
-                    },
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    '${_time_edit[1]}',
-                    style: sectionText.apply(
-                        color: _enabled ? colorScheme[6] : _disabledGrey),
-                  ),
-                ),
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: color,
-                      ),
+                        updateMinTen(pos: true);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[1] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_up,
+                          color: color,
+                        ),
+                      )),
+                  Container(
+                    child: Text(
+                      '${_time_edit[1]}',
+                      style: sectionText.apply(
+                          color: _enabled ? colorScheme[6] : _disabledGrey),
                     ),
-                    onPointerDown: (_) async {
-                      _updateTime[1] = true;
-
-                      updateMinTen(pos: false);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[1] = false;
-                    },
                   ),
-                ),
-              ],
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[1] = true;
+
+                        updateMinTen(pos: false);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[1] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: color,
+                        ),
+                      )),
+                ],
+              ),
             ),
             Text(
               ' ',
               style: sectionText.apply(
                   color: _enabled ? colorScheme[6] : _disabledGrey),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_up,
-                        color: color,
-                      ),
-                    ),
-                    onPointerDown: (_) async {
-                      _updateTime[2] = true;
+            IntrinsicWidth(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[2] = true;
 
-                      updateMinOne(pos: true);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[2] = false;
-                    },
-                  ),
-                ),
-                Container(
-                  child: Text(
-                    "${_time_edit[2]}",
-                    style: sectionText.apply(
-                        color: _enabled ? colorScheme[6] : _disabledGrey),
-                  ),
-                ),
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: color,
-                      ),
+                        updateMinOne(pos: true);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[2] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_up,
+                          color: color,
+                        ),
+                      )),
+                  Container(
+                    child: Text(
+                      "${_time_edit[2]}",
+                      style: sectionText.apply(
+                          color: _enabled ? colorScheme[6] : _disabledGrey),
                     ),
-                    onPointerDown: (_) async {
-                      _updateTime[2] = true;
-
-                      updateMinOne(pos: false);
-                    },
-                    onPointerUp: (_) {
-                      _updateTime[2] = false;
-                    },
                   ),
-                ),
-              ],
+                  Listener(
+                      onPointerDown: (_) async {
+                        _updateTime[2] = true;
+
+                        updateMinOne(pos: false);
+                      },
+                      onPointerUp: (_) {
+                        _updateTime[2] = false;
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Icon(
+                          Icons.arrow_drop_down,
+                          color: color,
+                        ),
+                      )),
+                ],
+              ),
             ),
             Text(
               ' ',
               style: sectionText.apply(
                   color: _enabled ? colorScheme[6] : _disabledGrey),
             ),
-            Column(
+            IntrinsicWidth(
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_up,
-                        color: color,
-                      ),
-                    ),
+                Listener(
                     onPointerDown: (_) async {
                       _updateTime[3] = true;
 
@@ -455,8 +442,13 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                     onPointerUp: (_) {
                       _updateTime[3] = false;
                     },
-                  ),
-                ),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Icon(
+                        Icons.arrow_drop_up,
+                        color: color,
+                      ),
+                    )),
                 Container(
                   child: Text(
                     "${_time_edit[3]}",
@@ -464,14 +456,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                         color: _enabled ? colorScheme[6] : _disabledGrey),
                   ),
                 ),
-                Container(
-                  child: Listener(
-                    child: Container(
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        color: color,
-                      ),
-                    ),
+                Listener(
                     onPointerDown: (_) async {
                       _updateTime[3] = true;
 
@@ -480,10 +465,15 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                     onPointerUp: (_) {
                       _updateTime[3] = false;
                     },
-                  ),
-                ),
+                    child: Container(
+                      color: Colors.transparent,
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        color: color,
+                      ),
+                    )),
               ],
-            )
+            ))
           ],
         ),
         Transform.scale(

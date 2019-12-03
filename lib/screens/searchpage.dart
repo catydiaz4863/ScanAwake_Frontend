@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:provider/provider.dart';
+import 'package:scanawake/models/alarm.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       child: Scaffold(
           appBar: AppBar(
-            title: Text("ScanAwake"),
+            title: Text("Search for audio"),
           ),
           body: Column(children: <Widget>[
             Expanded(

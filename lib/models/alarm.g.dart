@@ -10,18 +10,21 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
   return Alarm(
       id: json['id'] as int,
       text: json['text'] as String,
-      days: (json['days'] as List)?.map((e) => e as int)?.toList(),
-      time:
-          json['time'] == null ? null : DateTime.parse(json['time'] as String),
+      day: json['day'] as int,
+      hour: json['hour'] as int,
+      minute: json['minute'] as int,
       enabled: json['enabled'] as bool,
-      audio: json['audio'] as String);
+      audio: json['audio'] as String,
+      local: json['local'] as bool);
 }
 
 Map<String, dynamic> _$AlarmToJson(Alarm instance) => <String, dynamic>{
       'id': instance.id,
       'text': instance.text,
-      'days': instance.days,
-      'time': instance.time?.toIso8601String(),
+      'day': instance.day,
+      'hour': instance.hour,
+      'minute': instance.minute,
       'enabled': instance.enabled,
-      'audio': instance.audio
+      'audio': instance.audio,
+      'local': instance.local
     };

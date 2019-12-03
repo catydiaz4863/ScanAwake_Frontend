@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:scanawake/models/alarm.dart';
 
 class SearchPage extends StatefulWidget {
+  String keyword;
+  SearchPage(this.keyword);
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -16,7 +19,7 @@ class _SearchPageState extends State<SearchPage> {
     return Container(
       child: Scaffold(
           appBar: AppBar(
-            title: Text("Search for audio"),
+            title: Text("Search: ${widget.keyword}"),
           ),
           body: Column(children: <Widget>[
             Expanded(

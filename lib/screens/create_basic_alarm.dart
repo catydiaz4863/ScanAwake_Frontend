@@ -128,7 +128,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   if (flag && bloc.titles.length != 0) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SearchPage()),
+                      MaterialPageRoute(builder: (context) => SearchPage(searchCtrl.text)),
                     );
                   }
                 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
+import 'package:scanawake/screens/EditAlarmScreen.dart';
 import 'package:scanawake/screens/loadingscreen.dart';
 import 'package:provider/provider.dart';
 import 'screens/loginscreen.dart';
@@ -38,8 +39,8 @@ class SetupWidget extends StatefulWidget {
 class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
+    // return TestScreen();
     return TestScreen();
-    //return MainScreen();
 
     if (bloc.isLoggedIn) {
       if (bloc.isReady) {
@@ -56,6 +57,8 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
-    return  _buildScreen(bloc);
+    // Added Scaffold in main, so we can have a single scaffold layout for all...
+    // Could make background image easier to set.
+    return Scaffold(body: SafeArea(child: _buildScreen(bloc)));
   }
 }

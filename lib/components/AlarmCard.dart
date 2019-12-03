@@ -28,10 +28,11 @@ class AlarmCard extends StatefulWidget {
       this.backgroundColor,
       this.borderRadius = 30.0,
       this.accentColor,
-      this.height})
+      this.height,
+      this.editMode = false})
       : super(key: key);
 
-  final bool enabled, alarmId;
+  final bool enabled, alarmId, editMode;
   final TimeOfDay time;
   final List<bool> daysEnabled;
   final Color backgroundColor, accentColor;
@@ -120,12 +121,13 @@ class _AlarmCardState extends State<AlarmCard> {
   }
 
   Widget timeSection(Color color) {
+    //String hourString = time;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Text(
-          '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
+          '${(_time.hour < 10) ? _time.hour : (_time.hour.toString()[0] + ' ' + _time.hour.toString()[1])} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
           style: sectionText.apply(
               color: _enabled ? colorScheme[6] : _disabledGrey),
         ),

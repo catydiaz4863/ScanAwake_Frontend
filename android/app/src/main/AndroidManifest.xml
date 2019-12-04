@@ -31,6 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity"/>
         <service
     android:name="io.flutter.plugins.androidalarmmanager.AlarmService"
     android:permission="android.permission.BIND_JOB_SERVICE"

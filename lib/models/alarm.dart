@@ -2,22 +2,50 @@ import 'package:json_annotation/json_annotation.dart';
 part 'alarm.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-
 class Alarm {
   int id;
   String text;
-  List<int> days;
-  DateTime time;
+  // List<int> days;
+  int day;
+//  DateTime time;
+  int hour;
+  int minute;
   bool enabled;
   String audio;
+  bool local = true;
+  //Timer t;
 
-  Alarm({this.id, this.text, this.days, this.time, this.enabled, this.audio});
+  Alarm(
+      {this.id,
+      this.text,
+      this.day,
+      this.hour,
+      this.minute,
+      this.enabled,
+      this.audio,
+      this.local}) {
+    //   if(enabled){
 
-  factory Alarm.fromJson(Map<String, dynamic> json){
-      return Alarm(id: json["id"], text: json["text"], days: json["days"], time: DateTime.parse(json["time"]), enabled: json["enabled"], audio: json["audio"]);
-    }
+    // }
+  }
 
-//  factory Alarm.fromJson(Map<String, dynamic> json) => _$AlarmFromJson(json);
+  factory Alarm.fromJson(Map<String, dynamic> json) {
+    return Alarm(
+        id: json["id"],
+        text: json["text"],
+        day: json["day"],
+        hour: json["hour"],
+        minute: json["minute"],
+        enabled: json["enabled"],
+        audio: json["audio"],
+        local: json["local"]);
+  }
 
-   Map<String, dynamic> toJson() => _$AlarmToJson(this);
+  Map<String, dynamic> toJson() => _$AlarmToJson(this);
+
+  void disable() {
+    //removes the timer
+
+    //sets enabled to be false;
+  }
 }

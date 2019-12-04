@@ -1,123 +1,125 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:audioplayers/audio_cache.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:scanawake/models/alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:scanawake/models/user.dart';
 
 class AppBloc extends ChangeNotifier {
   bool isReady = false;
-  bool isLoggedIn = false;
-  bool didLoginFail = false;
-  bool didLoadFail = false;
-  User myAccount;
-  String token;
+  int numAlarms = 0;
 
-/*
+  AudioPlayer networkPlayer = AudioPlayer();
+  static AudioCache localCache = AudioCache();
+  AudioPlayer localPlayer;
+  String chosenTitle = "default";
+  String chosenURL = "";
+  List<String> titles = List<String>();
+  List<String> urls = List<String>();
+  String deezerKEY = "3b40ebf5a48debdd33cf1e497c9025df";
+  String deezerID = "382824";
+  bool ringing = false;
+  String player = "local";
+
+  List<Alarm> alarms = List<Alarm>();
+  List<Timer> timers = List<Timer>();
+  List<int> timerIDs = List<int>();
+
+  BuildContext mainContext;
+
   AppBloc() {
-    setup();
-  }
+    //setup();
+    alarms = [];
+    localCache.load('mp3/alarm_clock.mp3');
 
+    //load from saved stuff
 
-  Future<void> setup() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    token = (prefs.getString('token') ?? null);
-    if (token != null) {
-      isLoggedIn = true;
-      notifyListeners();
-      loadData();
-    }
-    
-  }
-
-  Future<void> loadData() async {
-    if (isLoggedIn) {
-      bool fetchedTimeline = await fetchTimeline();
-      bool fetchedAccount = await fetchAccount();
-      if (fetchedTimeline && fetchedAccount) {
-        print("is ready");
-        isReady = true;
-        notifyListeners();
-      } else {
-        print("is not ready");
-        didLoadFail = true;
-        notifyListeners();
-      }
-    }else{
-      print("not logged in");
-    }
-  }
-*/
-
-  Future<void> attemptLogin(String username, String password) async {
-    print(
-        "attempting login https://nameless-escarpment-45560.herokuapp.com/api/login?username=$username&password=$password");
-    var response = await http.get(
-        "https://nameless-escarpment-45560.herokuapp.com/api/login?username=$username&password=$password");
-    if (response.statusCode == 200) {
-      print("succeeded login");
-      didLoginFail = false;
-      Map<String, dynamic> jsonData = json.decode(response.body);
-      token = jsonData["token"];
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('token', token);
-      if (token != null) {
-        isLoggedIn = true;
-      }
-      notifyListeners();
-    } else {
-      print(response.body);
-      print("login did not succeed");
-      didLoginFail = true;
-      notifyListeners();
-    }
-  }
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove("token");
-    isLoggedIn = false;
+    load();
     notifyListeners();
   }
 
-/*
-  Future<bool> fetchTimeline() async {
-    var response = await http.get(
-        "https://nameless-escarpment-45560.herokuapp.com/api/v1/posts",
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    if(response.statusCode == 200){
-      List<dynamic> serverPosts = json.decode(response.body);
-      for(int i = 0; i < serverPosts.length; i++){
-        timeline.add(Post.fromJson(serverPosts[i]));
+  void load() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int savedNum = prefs.getInt('numAlarms');
+  //  prefs.clear();
+    if (savedNum != 0 && savedNum != null) {
+      numAlarms = savedNum;
 
+      for (int i = 0; i < savedNum; i++) {
+        String tmp = prefs.getString('$i');
+        Alarm newAlarm = Alarm.fromJson(json.decode(tmp));
+        alarms.add(newAlarm);
+      }
+    }
+  }
+
+  void ring(Alarm a) async {
+    
+    ringing = true;
+    print("playing sound");
+    if (a.local)
+      localPlayer = await localCache.loop("mp3/alarm_clock.mp3", volume: 0.5);
+    else {
+      networkPlayer.setReleaseMode(ReleaseMode.LOOP);
+      networkPlayer.setVolume(1);
+      networkPlayer.play(a.audio);
+    }
+  }
+
+  void turnOffAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    ringing = false;
+    print("turning off alarm");
+
+    // temporary - makes alarm one-time-only
+    prefs.remove('${a.id}');
+    alarms.remove(a);
+    numAlarms--;
+    int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+    timerIDs.remove(a.id);
+    timers.remove(timerIndex);
+    notifyListeners();
+
+    if (a.local)
+      localPlayer.stop();
+    else
+      networkPlayer.stop();
+  }
+
+  Future addAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    alarms.add(a);
+    numAlarms++;
+
+    prefs.setInt('numAlarms', numAlarms);
+    Map<String, dynamic> jsonAlarm = a.toJson();
+
+    prefs.setString('${numAlarms - 1}', json.encode(jsonAlarm));
+    notifyListeners();
+  }
+
+  Future<bool> searchAudio(String keyword) async {
+    titles.clear();
+    urls.clear();
+    var response = await http.get("https://api.deezer.com/search?q=$keyword",
+        headers: {'secret_key': "$deezerKEY", 'app_id': "$deezerID"});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsondata = json.decode(response.body);
+      for (int i = 0; i < jsondata["data"].length; i++) {
+        print(jsondata["data"][i]["title"]);
+        print(jsondata["data"][i]["preview"]);
+        titles.add(jsondata["data"][i]["title"].toString());
+        urls.add(jsondata["data"][i]["preview"].toString());
       }
       return true;
     }
     return false;
   }
-
-  Future<bool> fetchAccount() async {
-    print("getting account data");
-    var response = await http.get(
-        "https://nameless-escarpment-45560.herokuapp.com/api/v1/my_account",
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-    if (response.statusCode == 200) {
-      myAccount = User.fromJson(json.decode(response.body));
-
-      print("getting account posts");
-      var my_posts_response = await http.get(
-          "https://nameless-escarpment-45560.herokuapp.com/api/v1/my_posts",
-          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-      if (my_posts_response.statusCode == 200) {
-        print("successfully got account posts");
-        List<dynamic> server_posts = json.decode(my_posts_response.body);
-        my_posts = server_posts.map((p) => Post.fromJson(p)).toList();
-        return true;
-      }
-    } else {
-      print(response.body);
-      print("account load failed");
-    }
-    return false;
-  }
-  */
 }

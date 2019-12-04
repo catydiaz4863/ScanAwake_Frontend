@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 import 'package:scanawake/blocs/appbloc.dart';
 import 'package:scanawake/models/alarm.dart';
@@ -13,7 +14,22 @@ class DisableScreen extends StatefulWidget {
 }
 
 class _DisableScreenState extends State<DisableScreen> {
+  String barcode = "";
+  Future<void> check() async {
+    print("starting scan");
+    barcode = await FlutterBarcodeScanner.scanBarcode(
+        "#6a0dad", "Cancel", true, ScanMode.BARCODE);
+    print("scanned::::::::$barcode");
+
+    setState(() {});
+    print("scanned");
+  }
+
   @override
+  initState() {
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
@@ -25,8 +41,13 @@ class _DisableScreenState extends State<DisableScreen> {
         bloc.ringing
             ? Center(
                 child: GestureDetector(
-                onTap: () {
-                  bloc.turnOffAlarm(widget.a);
+                onTap: () async {
+                  await check();
+                  if (barcode != "")
+                    bloc.turnOffAlarm(widget.a);
+                  else {
+                    while (barcode == "") check();
+                  }
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => MainScreen()),

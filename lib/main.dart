@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'models/alarm.dart';
 import 'screens/mainscreen.dart';
 import 'screens/_test.dart';
+import 'screens/barcode_scanner.dart';
 
 void main() => runApp(MyApp());
 
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(elevation: 0),
           primarySwatch: Colors.purple,
         ),
-        home: SetupWidget(),
+        home: MainScreen(),
       ),
     );
   }
@@ -65,13 +66,6 @@ class _SetupWidgetState extends State<SetupWidget> {
     // return CreateBasicAlarm();
 
     return MainScreen();
-    /*
-      if (bloc.isReady) {
-        return MainScreen();
-      } else {
-        return LoadingScreen();
-      }
-      */
   }
 
   @override

@@ -45,7 +45,7 @@ class AppBloc extends ChangeNotifier {
   void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int savedNum = prefs.getInt('numAlarms');
-    prefs.clear();
+  //  prefs.clear();
     if (savedNum != 0 && savedNum != null) {
       numAlarms = savedNum;
 

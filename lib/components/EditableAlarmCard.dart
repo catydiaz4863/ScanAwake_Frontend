@@ -3,11 +3,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:volume/volume.dart';
 
 // NOTE: Currently, days are passed in/read as [true, true, false, false, false, true, false] ([Sunday, Monday, Tusday, Wednesday, Thursday, Friday, Saturday])
 // TODO: FutureBuilder Based on hasVibration && hasVibrationAmplitude to know whether to use a slider with multiple amplitudes. Or just an on/off slider. (or neither)
 // TODO: When wrapping time, update else. (ex. when going to one's upper/lower limit -> update other value's number...)
 // TODO: Figure out how to manipulate _time_edit values to set clock!
+// TODO: Disable quick sliding in volume OR figure out how to deal with lag due to multiple awaits (sliding quickly)...
 
 /// Card for showing editable alarm.
 ///
@@ -22,15 +27,6 @@ class EditableAlarmCard extends StatefulWidget {
       this.volumeSliderValue = 0.0,
       this.enabled = true,
       this.time,
-      this.daysEnabled = const [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
       this.backgroundColor,
       this.borderRadius = 30.0,
       this.accentColor,
@@ -40,7 +36,6 @@ class EditableAlarmCard extends StatefulWidget {
 
   final bool enabled, alarmId, editMode;
   final TimeOfDay time;
-  final List<bool> daysEnabled;
   final Color backgroundColor, accentColor;
   final double height, borderRadius, vibrateSliderValue, volumeSliderValue;
 
@@ -49,10 +44,13 @@ class EditableAlarmCard extends StatefulWidget {
 }
 
 class _EditableAlarmCardState extends State<EditableAlarmCard> {
-  bool _enabled, _mainView;
+  bool _enabled, _mainView, _isSoundPlaying;
+  int _maxVol = 1, _initVol = 1;
   TimeOfDay _time;
-  List<bool> _daysEnabled;
   double _vibrateSliderVal, _volumeSliderVal;
+  AudioPlayer audioPlayer;
+  AudioCache playerCache;
+
   // [hour, min_ten, min_one, am/pm]
   List<dynamic> _time_edit = [];
   List<bool> _updateTime = [];
@@ -61,7 +59,10 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
   @override
   void initState() {
     super.initState();
+    initPlatformState(); // Should be done in root widget (so, in home?)
 
+    audioPlayer = AudioPlayer();
+    playerCache = AudioCache();
     _enabled = widget.enabled;
     _time = widget.time == null ? new TimeOfDay.now() : widget.time;
     _time_edit.add(_time.hour % 12 + 1);
@@ -71,12 +72,24 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
         ? _time.minute
         : int.parse(_time.minute.toString()[1]));
     _time_edit.add(_time.hour <= 12 ? 'AM' : 'PM');
-    _daysEnabled = widget.daysEnabled;
     _mainView = true;
     _vibrateSliderVal = widget.vibrateSliderValue;
     _volumeSliderVal = widget.volumeSliderValue;
+    _isSoundPlaying = false;
     _updateTime = [false, false, false, false];
     _loopingTime = [false, false, false, false];
+  }
+
+  Future<void> initPlatformState() async {
+    print('essre');
+
+    // audioplayer is currently using media/music. Android only...
+    Volume.controlVolume(AudioManager.STREAM_MUSIC);
+    print('ettre');
+
+    setState(() async {
+      _maxVol = await Volume.getMaxVol;
+    });
   }
 
   vibrate() async {
@@ -90,7 +103,22 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     }
   }
 
-  testVolume() async {}
+  // Volume Slider blop.
+  testVolume() async {
+    setState(() {
+      _isSoundPlaying = true;
+    });
+
+    playerCache.load('mp3/bad_custom_notif.mp3');
+
+    Volume.setVol(_volumeSliderVal.floor());
+
+    audioPlayer = await playerCache.play("mp3/bad_custom_notif.mp3", volume: 1);
+
+    setState(() {
+      _isSoundPlaying = false;
+    });
+  }
 
   updateAMPM() async {
     if (_loopingTime[3]) return;
@@ -234,18 +262,20 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
               height: 37.5,
               child: Slider(
                 min: 0.0,
-                max: 10.0,
+                max: _maxVol.toDouble(),
                 value: _volumeSliderVal,
                 activeColor: _enabled ? color : _disabledGrey,
                 inactiveColor: _disabledGrey.withOpacity(.25),
-                onChanged: (v) async {
-                  setState(() {
-                    _volumeSliderVal = v;
-                  });
+                onChanged: _isSoundPlaying
+                    ? null
+                    : (v) async {
+                        setState(() {
+                          _volumeSliderVal = v;
+                        });
 
-                  testVolume();
-                },
-                divisions: 10,
+                        testVolume();
+                      },
+                divisions: _maxVol,
               ))
         ],
       ),
@@ -506,38 +536,34 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     double _scrHeight = MediaQuery.of(context).size.height;
     Color _accentColor = widget.accentColor ?? colorScheme[3];
 
-    return GestureDetector(
-        onLongPress: () {
-          // TODO: Go to Main Edit screen.
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: widget.backgroundColor != null
-                ? widget.backgroundColor.withOpacity(0.7)
-                : colorScheme[0].withOpacity(.7),
-            borderRadius: BorderRadius.circular(widget.borderRadius),
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.backgroundColor != null
+            ? widget.backgroundColor.withOpacity(0.7)
+            : colorScheme[0].withOpacity(.7),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+      ),
+      height: widget.height != null
+          ? widget.height
+          : (_scrWidth < _scrHeight)
+              ? _scrWidth * _bound + 65
+              : _scrHeight * _bound + 65,
+      width: _scrWidth < _scrHeight ? _scrWidth : _scrHeight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 30),
+              child: timeSection(_accentColor),
+            ),
           ),
-          height: widget.height != null
-              ? widget.height
-              : (_scrWidth < _scrHeight)
-                  ? _scrWidth * _bound + 65
-                  : _scrHeight * _bound + 65,
-          width: _scrWidth < _scrHeight ? _scrWidth : _scrHeight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: timeSection(_accentColor),
-                ),
-              ),
-              Divider(),
-              vibrationSection(_accentColor),
-              volumeSection(_accentColor),
-            ],
-          ),
-        ));
+          Divider(thickness: .65),
+          vibrationSection(_accentColor),
+          volumeSection(_accentColor),
+        ],
+      ),
+    );
   }
 }

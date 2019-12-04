@@ -23,9 +23,7 @@ class TestScreen extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: EditableAlarmCard(
-                daysEnabled: [false, false, true, false, true, false, false],
-              ),
+              child: EditableAlarmCard(),
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),

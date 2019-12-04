@@ -517,6 +517,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
               if (v) {
                 vibrate();
+                testVolume();
               }
             },
             value: _enabled,

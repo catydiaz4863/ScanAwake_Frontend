@@ -36,8 +36,8 @@ class _MainScreenState extends State<MainScreen> {
         ),
         body: SafeArea(
           child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 25),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,6 +45,7 @@ class _MainScreenState extends State<MainScreen> {
                   bloc.numAlarms != 0
                       ? Expanded(
                           child: new ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             itemCount: bloc.numAlarms,
                             itemBuilder: (BuildContext context, int index) {
                               Alarm current = bloc.alarms[index];
@@ -58,17 +59,21 @@ class _MainScreenState extends State<MainScreen> {
                                 false,
                                 false
                               ];
+
                               days[current.day - 1] = true;
                               TimeOfDay alarmTime = TimeOfDay(
                                   hour: current.hour - 1,
                                   minute: current.minute); // 3:00pm
 
-                              return AlarmCard(
-                                enabled: true,
-                                daysEnabled: days,
-                                time: alarmTime,
-                                accentColor: Colors.purple,
-                              );
+                              return Padding(
+                                  padding: EdgeInsets.only(top: 15),
+                                  child: AlarmCard(
+                                    alarmId: bloc.alarms[index].id,
+                                    enabled: true,
+                                    daysEnabled: days,
+                                    time: alarmTime,
+                                    accentColor: Colors.purple,
+                                  ));
                             },
                           ),
                         )
@@ -78,12 +83,13 @@ class _MainScreenState extends State<MainScreen> {
                     child: AddAlarmCard(
                       buttonColor: Colors.purple,
                       onPressed: () {
-                            bloc.mainContext = context;
+                        bloc.mainContext = context;
 
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CreateBasicAlarm(bloc.mainContext)),
+                              builder: (context) =>
+                                  CreateBasicAlarm(bloc.mainContext)),
                         );
                       },
                     ),

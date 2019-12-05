@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
 import 'package:scanawake/models/alarm.dart';
+import 'package:scanawake/screens/EditAlarmScreen.dart';
 
 // NOTE: Currently, days are passed in/read as [true, true, false, false, false, true, false] ([Sunday, Monday, Tusday, Wednesday, Thursday, Friday, Saturday])
 
@@ -33,11 +34,12 @@ class AlarmCard extends StatefulWidget {
       this.editMode = false})
       : super(key: key);
 
-  final bool enabled, alarmId, editMode;
+  final bool enabled, editMode;
   final TimeOfDay time;
   final List<bool> daysEnabled;
   final Color backgroundColor, accentColor;
   final double height, borderRadius;
+  final int alarmId;
 
   @override
   _AlarmCardState createState() => _AlarmCardState();
@@ -122,13 +124,14 @@ class _AlarmCardState extends State<AlarmCard> {
   }
 
   Widget timeSection(Color color) {
-    //String hourString = time;
+    int _hourString = _time.hour % 12 + 1;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Text(
-          '${(_time.hour < 10) ? _time.hour : (_time.hour.toString()[0] + ' ' + _time.hour.toString()[1])} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
+          '${(_hourString < 10) ? _hourString : (_hourString.toString()[0] + ' ' + _hourString.toString()[1])} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
           style: sectionText.apply(
               color: _enabled ? colorScheme[6] : _disabledGrey),
         ),
@@ -161,7 +164,12 @@ class _AlarmCardState extends State<AlarmCard> {
 
     return GestureDetector(
         onLongPress: () {
-          // TODO: Go to Main Edit screen.
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditAlarmScreen(
+                        alarmId: widget.alarmId,
+                      )));
         },
         child: Container(
           decoration: BoxDecoration(

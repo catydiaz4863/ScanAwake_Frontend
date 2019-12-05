@@ -30,13 +30,13 @@ class EditableAlarmCard extends StatefulWidget {
       this.backgroundColor,
       this.borderRadius = 30.0,
       this.accentColor,
-      this.height,
-      this.editMode = false})
+      this.height,})
       : super(key: key);
 
-  final bool enabled, alarmId, editMode;
+  final bool enabled;
   final TimeOfDay time;
   final Color backgroundColor, accentColor;
+  final int alarmId;
   final double height, borderRadius, vibrateSliderValue, volumeSliderValue;
 
   @override

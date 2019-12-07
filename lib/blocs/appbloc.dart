@@ -5,6 +5,7 @@ import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:scanawake/models/alarm.dart';
+import 'package:scanawake/screens/disable_alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -45,7 +46,7 @@ class AppBloc extends ChangeNotifier {
   void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int savedNum = prefs.getInt('numAlarms');
-  //  prefs.clear();
+//    prefs.clear();
     if (savedNum != 0 && savedNum != null) {
       numAlarms = savedNum;
 
@@ -53,12 +54,13 @@ class AppBloc extends ChangeNotifier {
         String tmp = prefs.getString('$i');
         Alarm newAlarm = Alarm.fromJson(json.decode(tmp));
         alarms.add(newAlarm);
+        timers.add(createTimer(newAlarm));
+        timerIDs.add(newAlarm.id);
       }
     }
   }
 
   void ring(Alarm a) async {
-    
     ringing = true;
     print("playing sound");
     if (a.local)
@@ -77,6 +79,7 @@ class AppBloc extends ChangeNotifier {
     print("turning off alarm");
 
     // temporary - makes alarm one-time-only
+    /*
     prefs.remove('${a.id}');
     alarms.remove(a);
     numAlarms--;
@@ -84,11 +87,61 @@ class AppBloc extends ChangeNotifier {
     timerIDs.remove(a.id);
     timers.remove(timerIndex);
     notifyListeners();
-
+    */
+    
     if (a.local)
       localPlayer.stop();
     else
       networkPlayer.stop();
+  }
+
+  void toggleAlarm(Alarm a) {
+    if (a.enabled) {
+      print("alarm disabled");
+      int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+      print("timer index = $timerIndex");
+      timerIDs.remove(a.id);
+      timers[timerIndex].cancel();
+      timers.remove(timerIndex);
+      a.enabled = false;
+    } else {
+      print("alarm enabled");
+      int toggleID = timerIDs.indexWhere((id) => id == a.id);
+      timers[toggleID] = createTimer(a);
+      a.enabled = true;
+    }
+
+    notifyListeners();
+  }
+
+  Duration getDifference(int h, int m, int d) {
+    var alarm;
+    var today = new DateTime.now();
+    if (today.day == d)
+      alarm = new DateTime(today.year, today.month, today.day, h, m);
+    else
+      alarm = new DateTime(today.year, today.month, d, h, m);
+
+    print("Alarm set to: ${alarm.day} -> ${alarm.hour}:${alarm.minute}");
+    Duration difference = alarm.difference(DateTime.now());
+
+    return difference;
+  }
+
+  Timer createTimer(Alarm a) {
+    Duration difference = getDifference(a.hour, a.minute, a.day);
+    print("");
+    print("Setting timer for ${a.hour}:${a.minute}");
+    ;
+    print("");
+    return Timer(Duration(seconds: difference.inSeconds), () {
+      print("Ring ring ${a.hour}: ${a.minute}");
+      ring(a);
+      Navigator.push(
+        mainContext,
+        MaterialPageRoute(builder: (ct) => DisableScreen(a)),
+      );
+    });
   }
 
   Future addAlarm(Alarm a) async {

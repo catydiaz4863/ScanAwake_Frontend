@@ -28,6 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
+    bloc.load();
     bloc.mainContext = context;
 
     return Scaffold(

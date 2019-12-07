@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
-    DateTime current;
+    bloc.mainContext = context;
 
     return Scaffold(
         appBar: AppBar(
@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
                       ? Expanded(
                           child: new ListView.builder(
                             itemCount: bloc.numAlarms,
-                            itemBuilder: (BuildContext context, int index) {
+                            itemBuilder: (BuildContext c, int index) {
                               Alarm current = bloc.alarms[index];
 
                               List<bool> days = [
@@ -64,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
                                   minute: current.minute); // 3:00pm
 
                               return AlarmCard(
+                                thisAlarm: current,
                                 enabled: true,
                                 daysEnabled: days,
                                 time: alarmTime,
@@ -78,12 +79,11 @@ class _MainScreenState extends State<MainScreen> {
                     child: AddAlarmCard(
                       buttonColor: Colors.purple,
                       onPressed: () {
-                            bloc.mainContext = context;
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CreateBasicAlarm(bloc.mainContext)),
+                              builder: (context) =>
+                                  CreateBasicAlarm(bloc.mainContext)),
                         );
                       },
                     ),

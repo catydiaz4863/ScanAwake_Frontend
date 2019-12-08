@@ -28,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
-    DateTime current;
+    bloc.mainContext = context;
 
     return Scaffold(
         appBar: AppBar(
@@ -47,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
                           child: new ListView.builder(
                             physics: BouncingScrollPhysics(),
                             itemCount: bloc.numAlarms,
-                            itemBuilder: (BuildContext context, int index) {
+                            itemBuilder: (BuildContext c, int index) {
                               Alarm current = bloc.alarms[index];
 
                               List<bool> days = [
@@ -65,15 +65,13 @@ class _MainScreenState extends State<MainScreen> {
                                   hour: current.hour - 1,
                                   minute: current.minute); // 3:00pm
 
-                              return Padding(
-                                  padding: EdgeInsets.only(top: 15),
-                                  child: AlarmCard(
-                                    alarmId: bloc.alarms[index].id,
-                                    enabled: true,
-                                    daysEnabled: days,
-                                    time: alarmTime,
-                                    accentColor: Colors.purple,
-                                  ));
+                              return AlarmCard(
+                                thisAlarm: current,
+                                enabled: true,
+                                daysEnabled: days,
+                                time: alarmTime,
+                                accentColor: Colors.purple,
+                              );
                             },
                           ),
                         )
@@ -83,8 +81,6 @@ class _MainScreenState extends State<MainScreen> {
                     child: AddAlarmCard(
                       buttonColor: Colors.purple,
                       onPressed: () {
-                        bloc.mainContext = context;
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(

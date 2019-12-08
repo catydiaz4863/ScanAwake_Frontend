@@ -1,18 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanawake/blocs/appbloc.dart';
-import 'package:scanawake/screens/disable_alarm.dart';
 import 'package:scanawake/screens/searchpage.dart';
-import 'package:volume/volume.dart';
 import 'package:scanawake/components/RoundedInput.dart';
-import 'package:scanawake/components/RoundedButton.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:scanawake/models/alarm.dart';
 
 class CreateBasicAlarm extends StatefulWidget {
-
   BuildContext mainct;
   CreateBasicAlarm(this.mainct);
 
@@ -37,20 +30,6 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
     if (day == "su") //sunday
       return 7;
     return 0;
-  }
-
-  Duration create(int h, int m, int d) {
-    var alarm;
-    var today = new DateTime.now();
-    if (today.day == d)
-      alarm = new DateTime(today.year, today.month, today.day, h, m);
-    else
-      alarm = new DateTime(today.year, today.month, d, h, m);
-
-    print("Alarm set to: ${alarm.day} -> ${alarm.hour}:${alarm.minute}");
-    Duration difference = alarm.difference(today);
-
-    return difference;
   }
 
   @override
@@ -149,7 +128,6 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   int h = int.parse(hourCtrl.text);
                   int m = int.parse(minuteCtrl.text);
                   int d = int.parse(dayCtrl.text);
-                  Duration difference = create(h, m, d);
 
                   int newID = bloc.numAlarms;
                   Alarm a;
@@ -181,20 +159,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   setState(() {});
 
                   bloc.timerIDs.add(a.id);
-                  ct = bloc.mainContext;
-                  bloc.timers.add(Timer(
-                      Duration(
-                          days: difference.inDays,
-                          hours: difference.inHours,
-                          minutes: difference.inMinutes,
-                          seconds: difference.inSeconds), () {
-                    print("Ring ring $h: $m");
-                    bloc.ring(a);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (ct) => DisableScreen(a)),
-                    );
-                  }));
+                  bloc.timers.add(bloc.createTimer(a));
                   Navigator.pop(context);
                 })),
         new Container(
@@ -205,7 +170,6 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
             h += 12;
             int m = int.parse(minuteCtrl.text);
             int d = int.parse(dayCtrl.text);
-            Duration difference = create(h, m, d);
 
             int newID = bloc.numAlarms;
             Alarm a;
@@ -237,24 +201,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
             setState(() {});
 
             bloc.timerIDs.add(a.id);
-            ct = widget.mainct;
-
-            bloc.timers.add(Timer(
-                Duration(
-                    days: difference.inDays,
-                    hours: difference.inHours,
-                    minutes: difference.inMinutes,
-                    seconds: difference.inSeconds), () {
-              print("Ring ring $h: $m");
-              bloc.ring(a);
-              /*    Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DisableScreen(a)),
-              ); */
-              Navigator.pushReplacementNamed(ct, DisableScreen.routeName,
-                  arguments: a);
-              //        navigatorKey.currentState.pushNamed('/someRoute');
-            }));
+            bloc.timers.add(bloc.createTimer(a));
             Navigator.pop(context);
           },
         )),

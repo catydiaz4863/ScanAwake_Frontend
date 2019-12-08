@@ -13,6 +13,8 @@ class Alarm {
   bool enabled;
   String audio;
   bool local = true;
+  int vibrationLevel = 0;
+  int soundLevel = 0;
   //Timer t;
 
   Alarm(
@@ -23,7 +25,9 @@ class Alarm {
       this.minute,
       this.enabled,
       this.audio,
-      this.local}) {
+      this.local,
+      this.soundLevel,
+      this.vibrationLevel}) {
     //   if(enabled){
 
     // }
@@ -38,7 +42,9 @@ class Alarm {
         minute: json["minute"],
         enabled: json["enabled"],
         audio: json["audio"],
-        local: json["local"]);
+        local: json["local"],
+        vibrationLevel: json['vibrationLevel'],
+        soundLevel: json['soundLevel']);
   }
 
   Map<String, dynamic> toJson() => _$AlarmToJson(this);

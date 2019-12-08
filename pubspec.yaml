@@ -32,6 +32,9 @@ dependencies:
   datetime_picker_formfield: ^0.4.3
   image_picker: ^0.6.1+4
   flutter_barcode_scanner: ^0.1.7
+  flutter_launcher_icons: ^0.7.0
+
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -44,10 +47,9 @@ dev_dependencies:
   json_serializable: ^2.0.0
 
 flutter_icons:
-  image_path: assets/images/Untitled_Artwork.png
-  android: true
+  android: "launcher_icon"
   ios: true
-  adaptive_icon_background: "#ffffff"
+  image_path: "assets/images/logo1.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -63,7 +65,7 @@ flutter:
   assets:
     - assets/mp3/bad_custom_notif.mp3
     - assets/mp3/alarm_clock.mp3
-    - assets/images/Untitled_Artwork.png
+    - assets/images/logo1.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

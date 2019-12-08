@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:scanawake/blocs/appbloc.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
 import 'package:scanawake/models/alarm.dart';
@@ -16,7 +18,7 @@ class AlarmCard extends StatefulWidget {
   AlarmCard(
       {Key key,
       this.alarmId,
-      this.enabled = true,
+      this.enabled,
       this.time,
       this.daysEnabled = const [
         false,
@@ -31,10 +33,11 @@ class AlarmCard extends StatefulWidget {
       this.borderRadius = 30.0,
       this.accentColor,
       this.height,
-      this.editMode = false})
+      this.thisAlarm})
       : super(key: key);
 
-  final bool enabled, editMode;
+  Alarm thisAlarm;
+  final bool enabled;
   final TimeOfDay time;
   final List<bool> daysEnabled;
   final Color backgroundColor, accentColor;
@@ -54,7 +57,7 @@ class _AlarmCardState extends State<AlarmCard> {
   void initState() {
     super.initState();
 
-    _enabled = widget.enabled;
+    _enabled = widget.thisAlarm.enabled;
     _time = widget.time == null ? new TimeOfDay.now() : widget.time;
     _daysEnabled = widget.daysEnabled;
     _mainView = true;
@@ -125,6 +128,7 @@ class _AlarmCardState extends State<AlarmCard> {
 
   Widget timeSection(Color color) {
     int _hourString = _time.hour % 12 + 1;
+    AppBloc bloc = Provider.of<AppBloc>(context);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,9 +143,9 @@ class _AlarmCardState extends State<AlarmCard> {
           scale: 1.3,
           child: Switch(
             onChanged: (v) {
-              // TODO: Change enabled on device
+       //       bloc.toggleAlarm(widget.thisAlarm);
               setState(() {
-                _enabled = v;
+                _enabled = widget.thisAlarm.enabled;
               });
             },
             value: _enabled,

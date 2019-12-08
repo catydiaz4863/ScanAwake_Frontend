@@ -78,21 +78,19 @@ class AppBloc extends ChangeNotifier {
     ringing = false;
     print("turning off alarm");
 
-    // temporary - makes alarm one-time-only
-    /*
-    prefs.remove('${a.id}');
-    alarms.remove(a);
-    numAlarms--;
-    int timerIndex = timerIDs.indexWhere((id) => id == a.id);
-    timerIDs.remove(a.id);
-    timers.remove(timerIndex);
-    notifyListeners();
-    */
-    
     if (a.local)
       localPlayer.stop();
     else
       networkPlayer.stop();
+
+    // temporary - makes alarm one-time-only
+    // prefs.remove('${a.id}');
+    // alarms.remove(a);
+    // numAlarms--;
+    int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+    timerIDs.remove(a.id);
+    timers.remove(timerIndex);
+    notifyListeners();
   }
 
   void toggleAlarm(Alarm a) {

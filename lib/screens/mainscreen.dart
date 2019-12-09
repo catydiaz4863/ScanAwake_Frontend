@@ -57,9 +57,9 @@ class _MainScreenState extends State<MainScreen> {
     bloc.mainContext = context;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("ScanAwake"),
-        ),
+        // appBar: AppBar(
+        //   title: Text("ScanAwake"),
+        // ),
         body: SafeArea(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 15),

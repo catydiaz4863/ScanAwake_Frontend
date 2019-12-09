@@ -86,16 +86,21 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Edit Alarm"),
-        ),
+        // appBar: AppBar(
+        //   title: Text("Edit Alarm"),
+        // ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15),
-          child: ListView(
+          height: MediaQuery.of(context).size.height,
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        children: <Widget>[
+          Expanded(child:ListView(
+            semanticChildCount: 4,
+            shrinkWrap: true,
             children: <Widget>[
               // TODO: Make data come back.
               Padding(
-                padding: EdgeInsets.only(top: 10),
+                padding: EdgeInsets.only(top: 15),
                 child: EditableAlarmCard(
                   alarm: _alarm,
                 ),
@@ -133,8 +138,7 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                                           textAlign: TextAlign.center,
                                           style: smSectionText.apply(
                                               fontWeightDelta: index ==
-                                                      dayToRelativeRange(
-                                                          _alarm.day)
+                                                      dayToRelativeRange(_alarm.day)
                                                   ? 2
                                                   : 1,
                                               color: _alarm.enabled
@@ -146,8 +150,7 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                                                   : (index ==
                                                           dayToRelativeRange(
                                                               _alarm.day)
-                                                      ? primaryGrey
-                                                          .withOpacity(.7)
+                                                      ? primaryGrey.withOpacity(.7)
                                                       : _disabledGrey
                                                           .withOpacity(.6))),
                                         ))),
@@ -160,74 +163,80 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                       ),
                     )),
               ),
-
-              // TODO: Add 2x2 Grid (Using GridView instead of manual row/column) with changes
+              // TODO: Expand/Englarge based on screen size/orientation...
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: 300,
-                    height: 300,
-                    child: GridView.count(
-                      primary: false,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 15,
-                      crossAxisCount: 2,
-                      children: <Widget>[
-                        OptionButton(
-                          text: 'Change Sound',
-                          icon: Icons.music_note,
-                          onPressed: () {},
-                        ),
-                        OptionButton(
-                          text: 'Wake-up Check',
-                          icon: Icons.cached,
-                          onPressed: () {},
-                        ),
-                        OptionButton(
-                          text: 'Time Pressure',
-                          icon: Icons.timer,
-                          onPressed: () {},
-                        ),
-                        OptionButton(
-                          text: 'Mission Settings',
-                          icon: Icons.directions_run,
-                          onPressed: () {},
-                        ),
-                      ],
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: GridView.count(
+                        primary: false,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                        crossAxisCount: 2,
+                        children: <Widget>[
+                          OptionButton(
+                            text: 'Change Sound',
+                            icon: Icons.music_note,
+                            onPressed: () {},
+                          ),
+                          OptionButton(
+                            text: 'Wake-up Check',
+                            icon: Icons.cached,
+                            onPressed: () {},
+                          ),
+                          OptionButton(
+                            text: 'Time Pressure',
+                            icon: Icons.timer,
+                            onPressed: () {},
+                          ),
+                          OptionButton(
+                            text: 'Mission Settings',
+                            icon: Icons.directions_run,
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-
+                  ],
+                ),
+            ],
+          ),),
               // TODO: Add Row with Save/Cancel
               Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      RoundedButton(
-                        width: MediaQuery.of(context).size.width / 4,
-                        borderRadius: 10,
-                        buttonColor: bloc.appColor,
-                        text: 'Save',
-                        onPressed: () {},
-                      ),
-                      RoundedButton(
-                        width: MediaQuery.of(context).size.width / 4,
-                        borderRadius: 10,
-                        buttonColor: primaryGrey,
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  )),
-            ],
-          ),
-        ));
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  RoundedButton(
+                    width: MediaQuery.of(context).size.width / 4,
+                    borderRadius: 10,
+                    buttonColor: bloc.appColor,
+                    text: 'Save',
+                    onPressed: () {
+                      if(widget.newAlarm) {
+                        // Edit alarm stored.
+                      } else {
+                        // Create new alarm.
+                      }
+                    },
+                  ),
+                  RoundedButton(
+                    width: MediaQuery.of(context).size.width / 4,
+                    borderRadius: 10,
+                    buttonColor: primaryGrey,
+                    text: 'Cancel',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              )),
+        ],
+      ),
+    ));
   }
 }

@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
             );
           }
         },
-        showSemanticsDebugger: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0),

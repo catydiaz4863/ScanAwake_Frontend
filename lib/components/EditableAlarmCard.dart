@@ -14,7 +14,7 @@ import 'package:volume/volume.dart';
 // NOTE: Currently, days are passed in/read as [true, true, false, false, false, true, false] ([Sunday, Monday, Tusday, Wednesday, Thursday, Friday, Saturday])
 // TODO: FutureBuilder Based on hasVibration && hasVibrationAmplitude to know whether to use a slider with multiple amplitudes. Or just an on/off slider. (or neither)
 // TODO: When wrapping time, update else. (ex. when going to one's upper/lower limit -> update other value's number...)
-// TODO: Figure out how to manipulate _time_edit values to set clock!
+// TODO: Figure out how to manipulate _timeEdit values to set clock!
 // TODO: Disable quick sliding in volume OR figure out how to deal with lag due to multiple awaits (sliding quickly)...
 
 /// Card for showing editable alarm.
@@ -29,9 +29,11 @@ class EditableAlarmCard extends StatefulWidget {
     this.backgroundColor,
     this.borderRadius = 30.0,
     this.height,
+    this.onEdit,
   }) : super(key: key);
 
   final Alarm alarm;
+  final Function onEdit;
   final Color backgroundColor;
   final double height, borderRadius;
 
@@ -46,9 +48,10 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
   double _vibrateSliderVal, _volumeSliderVal;
   AudioPlayer audioPlayer;
   AudioCache playerCache;
+  Alarm _alarm;
 
   // [hour, min_ten, min_one, am/pm]
-  List<dynamic> _time_edit = [];
+  List<dynamic> _timeEdit = [];
   List<bool> _updateTime = [];
   List<bool> _loopingTime = [];
 
@@ -57,17 +60,18 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     super.initState();
     initPlatformState(); // Should be done in root widget (so, in home?)
 
+    _alarm = widget.alarm;
     audioPlayer = AudioPlayer();
     playerCache = AudioCache();
     _enabled = widget.alarm.enabled;
     _time = TimeOfDay(hour: widget.alarm.hour, minute: widget.alarm.minute);
-    _time_edit.add(_time.hour % 12 + 1); // Why'd I do this?
-    _time_edit
+    _timeEdit.add(_time.hour % 12 + 1); // Why'd I do this?
+    _timeEdit
         .add(_time.minute < 10 ? 0 : int.parse(_time.minute.toString()[0]));
-    _time_edit.add(_time.minute < 10
+    _timeEdit.add(_time.minute < 10
         ? _time.minute
         : int.parse(_time.minute.toString()[1]));
-    _time_edit.add(_time.hour <= 12 ? 'AM' : 'PM');
+    _timeEdit.add(_time.hour <= 12 ? 'AM' : 'PM');
     _mainView = true;
     _vibrateSliderVal = widget.alarm.vibrationLevel;
     _volumeSliderVal = widget.alarm.soundLevel;
@@ -77,7 +81,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
   }
 
   Future<void> initPlatformState() async {
-    // audioplayer is currently using media/music. Android only...
+    // audioplayer is currently using media/music.
     Volume.controlVolume(AudioManager.STREAM_MUSIC);
 
     setState(() async {
@@ -120,12 +124,14 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
     while (_updateTime[3]) {
       setState(() {
-        _time_edit[3] = _time_edit[3] == 'AM' ? 'PM' : 'AM';
+        _timeEdit[3] = _timeEdit[3] == 'AM' ? 'PM' : 'AM';
+        _alarm.hour = (_alarm.hour + 12) % 24; // TODO: FIX?
       });
 
       await Future.delayed(Duration(milliseconds: 225));
     }
 
+    widget.onEdit(_alarm);
     _loopingTime[3] = false;
   }
 
@@ -136,16 +142,20 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
     while (_updateTime[1]) {
       if (pos) {
-        int val = _time_edit[1] % 6 + 1;
+        int val = _timeEdit[1] % 6 + 1;
 
         setState(() {
-          _time_edit[1] = val == 6 ? 0 : val;
+          _timeEdit[1] = val == 6 ? 0 : val;
         });
       } else {
         setState(() {
-          _time_edit[1] = (_time_edit[1] - 1) % 6;
+          _timeEdit[1] = (_timeEdit[1] - 1) % 6;
         });
       }
+
+      _alarm.minute = int.parse('${_timeEdit[1]}${_timeEdit[2]}');
+      setState(() {});
+      widget.onEdit(_alarm);
 
       await Future.delayed(Duration(milliseconds: 225));
     }
@@ -160,16 +170,20 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
     while (_updateTime[2]) {
       if (pos) {
-        int val = _time_edit[2] % 10 + 1;
+        int val = _timeEdit[2] % 10 + 1;
 
         setState(() {
-          _time_edit[2] = val == 10 ? 0 : val;
+          _timeEdit[2] = val == 10 ? 0 : val;
         });
       } else {
         setState(() {
-          _time_edit[2] = (_time_edit[2] - 1) % 10;
+          _timeEdit[2] = (_timeEdit[2] - 1) % 10;
         });
       }
+
+      _alarm.minute = int.parse('${_timeEdit[1]}${_timeEdit[2]}');
+      setState(() {});
+      widget.onEdit(_alarm);
 
       await Future.delayed(Duration(milliseconds: 225));
     }
@@ -185,15 +199,19 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     while (_updateTime[0]) {
       if (pos) {
         setState(() {
-          _time_edit[0] = (_time_edit[0] % 12) + 1;
+          _timeEdit[0] = (_timeEdit[0] % 12) + 1;
         });
       } else {
-        int val = (_time_edit[0] - 1) % 12;
+        int val = (_timeEdit[0] - 1) % 12;
 
         setState(() {
-          _time_edit[0] = val == 0 ? 12 : val;
+          _timeEdit[0] = val == 0 ? 12 : val;
         });
       }
+
+      _alarm.hour = _alarm.hour > 12 ? (_timeEdit[0] + 12) : _timeEdit[0];
+      setState(() {});
+      widget.onEdit(_alarm);
 
       await Future.delayed(Duration(milliseconds: 225));
     }
@@ -228,6 +246,8 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                     _vibrateSliderVal = v;
                   });
 
+                  _alarm.vibrationLevel = v;
+                  widget.onEdit(_alarm);
                   vibrate();
                 },
                 divisions: 10,
@@ -266,6 +286,8 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                           _volumeSliderVal = v;
                         });
 
+                        _alarm.soundLevel = v;
+                        widget.onEdit(_alarm);
                         testVolume();
                       },
                 divisions: _maxVol,
@@ -310,14 +332,14 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                          text: _time_edit[0] >= 10
-                              ? '${_time_edit[0].toString()[0]} '
-                              : '${_time_edit[0]}',
+                          text: _timeEdit[0] >= 10
+                              ? '${_timeEdit[0].toString()[0]} '
+                              : '${_timeEdit[0]}',
                         ),
                         TextSpan(
-                            text: _time_edit[0] < 10
+                            text: _timeEdit[0] < 10
                                 ? ''
-                                : '${_time_edit[0].toString()[1]}'),
+                                : '${_timeEdit[0].toString()[1]}'),
                       ],
                       style: sectionText.apply(
                           color: _enabled ? colorScheme[6] : _disabledGrey),
@@ -370,7 +392,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                       )),
                   Container(
                     child: Text(
-                      '${_time_edit[1]}',
+                      '${_timeEdit[1]}',
                       style: sectionText.apply(
                           color: _enabled ? colorScheme[6] : _disabledGrey),
                     ),
@@ -422,7 +444,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                       )),
                   Container(
                     child: Text(
-                      "${_time_edit[2]}",
+                      "${_timeEdit[2]}",
                       style: sectionText.apply(
                           color: _enabled ? colorScheme[6] : _disabledGrey),
                     ),
@@ -474,7 +496,7 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
                     )),
                 Container(
                   child: Text(
-                    "${_time_edit[3]}",
+                    "${_timeEdit[3]}",
                     style: sectionText.apply(
                         color: _enabled ? colorScheme[6] : _disabledGrey),
                   ),
@@ -507,6 +529,10 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
               setState(() {
                 _enabled = v;
               });
+
+              // TODO: Mess with timers...
+              _alarm.enabled = v;
+              widget.onEdit(_alarm);
 
               if (v) {
                 vibrate();

@@ -81,6 +81,16 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
     }
   }
 
+  Function editAlarm(Alarm _alarm) {
+    print('old: ${this._alarm}');
+    setState(() {
+      this._alarm = _alarm;
+    });
+    print('new: ${this._alarm}');
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
@@ -90,81 +100,89 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
         //   title: Text("Edit Alarm"),
         // ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height,
       margin: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: <Widget>[
-          Expanded(child:ListView(
-            semanticChildCount: 4,
-            shrinkWrap: true,
-            children: <Widget>[
-              // TODO: Make data come back.
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: EditableAlarmCard(
-                  alarm: _alarm,
+          Expanded(
+            child: ListView(
+              semanticChildCount: 4,
+              shrinkWrap: true,
+              children: <Widget>[
+                // TODO: Make data come back.
+                Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: EditableAlarmCard(
+                    alarm: _alarm,
+                    onEdit: (_alarm) => this.setState(() {
+                      print('old: ${this._alarm.enabled}');
+                      this._alarm = _alarm;
+                      print('new: ${this._alarm.enabled}');
+                    }),
+                  ),
                 ),
-              ),
 
-              // TODO: Finish Active Days Section
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                decoration: BoxDecoration(
-                    color: colorScheme[0].withOpacity(.7),
-                    borderRadius: BorderRadius.circular(20)),
-                height: 90,
-                child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: ListView.builder(
-                          physics: new BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 2.5, vertical: 2),
-                              child: Container(
-                                width: 40,
-                                child: InkWell(
-                                    onLongPress: () {
-                                      // TODO: Make it reflect changes on whatever we store it in. (Not just visually)
-                                    },
-                                    child: Align(
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          days[index].first,
-                                          textAlign: TextAlign.center,
-                                          style: smSectionText.apply(
-                                              fontWeightDelta: index ==
-                                                      dayToRelativeRange(_alarm.day)
-                                                  ? 2
-                                                  : 1,
-                                              color: _alarm.enabled
-                                                  ? (index ==
-                                                          dayToRelativeRange(
-                                                              _alarm.day)
-                                                      ? bloc.appColor
-                                                      : _disabledGrey)
-                                                  : (index ==
-                                                          dayToRelativeRange(
-                                                              _alarm.day)
-                                                      ? primaryGrey.withOpacity(.7)
-                                                      : _disabledGrey
-                                                          .withOpacity(.6))),
-                                        ))),
-                              ),
-                            );
-                          },
-                          itemCount: 7,
-                          scrollDirection: Axis.horizontal,
+                // TODO: Finish Active Days Section
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 20),
+                  decoration: BoxDecoration(
+                      color: colorScheme[0].withOpacity(.7),
+                      borderRadius: BorderRadius.circular(20)),
+                  height: 75,
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: ListView.builder(
+                            physics: new BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 2.5, vertical: 2),
+                                child: Container(
+                                  width: 40,
+                                  child: InkWell(
+                                      onLongPress: () {
+                                        // TODO: Make it reflect changes on whatever we store it in. (Not just visually)
+                                      },
+                                      child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            days[index].first,
+                                            textAlign: TextAlign.center,
+                                            style: smSectionText.apply(
+                                                fontWeightDelta: index ==
+                                                        dayToRelativeRange(
+                                                            _alarm.day)
+                                                    ? 2
+                                                    : 1,
+                                                color: _alarm.enabled
+                                                    ? (index ==
+                                                            dayToRelativeRange(
+                                                                _alarm.day)
+                                                        ? bloc.appColor
+                                                        : _disabledGrey)
+                                                    : (index ==
+                                                            dayToRelativeRange(
+                                                                _alarm.day)
+                                                        ? primaryGrey
+                                                            .withOpacity(.7)
+                                                        : _disabledGrey
+                                                            .withOpacity(.6))),
+                                          ))),
+                                ),
+                              );
+                            },
+                            itemCount: 7,
+                            scrollDirection: Axis.horizontal,
+                          ),
                         ),
-                      ),
-                    )),
-              ),
-              // TODO: Expand/Englarge based on screen size/orientation...
-              Row(
+                      )),
+                ),
+                // TODO: Expand/Englarge based on screen size/orientation...
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -202,10 +220,11 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                     ),
                   ],
                 ),
-            ],
-          ),),
-              // TODO: Add Row with Save/Cancel
-              Padding(
+              ],
+            ),
+          ),
+          // TODO: Add Row with Save/Cancel
+          Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -217,10 +236,37 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                     buttonColor: bloc.appColor,
                     text: 'Save',
                     onPressed: () {
-                      if(widget.newAlarm) {
-                        // Edit alarm stored.
+                      if (widget.newAlarm) {
+                        // TODO: Edit alarm stored.
+
                       } else {
-                        // Create new alarm.
+                        // TODO: Create new alarm.
+                        int newID = bloc.numAlarms;
+                        // Alarm a = new Alarm(
+                        //     id: newID,
+                        //     text: "${bloc.chosenTitle}",
+                        //     day: d,
+                        //     hour: h,
+                        //     minute: m,
+                        //     enabled: true,
+                        //     audio: _alarm."",
+                        //     local: bloc.chosenTitle == "default" ? true : false,
+                        //     vibrationLevel: 0.0,
+                        //     soundLevel: 0.0);
+                        bloc.editAlarm(_alarm);
+                        print("alarm edited");
+
+                        bloc.chosenURL = "";
+                        bloc.chosenTitle = "default";
+                        setState(() {});
+
+                        bloc.timerIDs.removeWhere((test) => test == _alarm.id);
+                        bloc.timerIDs.add(_alarm.id);
+
+                        // TODO: Edit the timers List
+                        // bloc.timers.removeWhere((test) => test)
+                        // bloc.timers.add(bloc.createTimer(a));
+                        Navigator.pop(context);
                       }
                     },
                   ),

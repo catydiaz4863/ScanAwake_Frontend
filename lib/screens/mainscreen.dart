@@ -61,34 +61,34 @@ class _MainScreenState extends State<MainScreen> {
         //   title: Text("ScanAwake"),
         // ),
         body: SafeArea(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  _buildAlarms(bloc),
-                  bloc.alarmsLoaded
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: AddAlarmCard(
-                            buttonColor: bloc.appColor,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateBasicAlarm(bloc.mainContext)),
-                              );
-                            },
-                          ),
-                        )
-                      : Container(),
-                ],
-              ),
-            ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _buildAlarms(bloc),
+              bloc.alarmsLoaded
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: AddAlarmCard(
+                        buttonColor: bloc.appColor,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateBasicAlarm(bloc.mainContext)),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }

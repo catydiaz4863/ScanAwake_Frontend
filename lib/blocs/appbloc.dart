@@ -154,6 +154,13 @@ class AppBloc extends ChangeNotifier {
     // id? or id - 1?
     alarms[a.id] = a;
 
+    print('Edit: ${alarms[a.id].hour}:${alarms[a.id].minute}');
+
+    print('---alarms---');
+    for(int i = 0; i < alarms.length; ++i) {
+      print('${alarms[i].hour}:${alarms[i].minute}');
+    }
+
     Map<String, dynamic> jsonAlarm = a.toJson();
 
     prefs.setString("${a.id}", json.encode(jsonAlarm));
@@ -164,8 +171,9 @@ class AppBloc extends ChangeNotifier {
   Future addAlarm(Alarm a) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    a.soundLevel = 0;
-    a.vibrationLevel = 0;
+    a.soundLevel = a.soundLevel ?? 0.0;
+    a.vibrationLevel = a.vibrationLevel ?? 0.0;
+    a.hour = a.hour - 1 % 12;
 
     alarms.add(a);
     numAlarms++;

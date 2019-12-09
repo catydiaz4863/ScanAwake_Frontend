@@ -15,7 +15,9 @@ Alarm _$AlarmFromJson(Map<String, dynamic> json) {
       minute: json['minute'] as int,
       enabled: json['enabled'] as bool,
       audio: json['audio'] as String,
-      local: json['local'] as bool);
+      local: json['local'] as bool,
+      soundLevel: (json['soundLevel'] as num)?.toDouble(),
+      vibrationLevel: (json['vibrationLevel'] as num)?.toDouble());
 }
 
 Map<String, dynamic> _$AlarmToJson(Alarm instance) => <String, dynamic>{
@@ -26,5 +28,7 @@ Map<String, dynamic> _$AlarmToJson(Alarm instance) => <String, dynamic>{
       'minute': instance.minute,
       'enabled': instance.enabled,
       'audio': instance.audio,
-      'local': instance.local
+      'local': instance.local,
+      'vibrationLevel': instance.vibrationLevel,
+      'soundLevel': instance.soundLevel
     };

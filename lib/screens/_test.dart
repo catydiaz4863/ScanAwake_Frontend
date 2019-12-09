@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/components/AddAlarmCard.dart';
 import 'package:scanawake/components/AlarmCard.dart';
+import 'package:scanawake/components/EditableAlarmCard.dart';
 import 'package:scanawake/components/RoundedButton.dart';
 import 'package:scanawake/components/RoundedInput.dart';
 import 'package:scanawake/consts.dart';
@@ -22,23 +23,15 @@ class TestScreen extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AlarmCard(
-                daysEnabled: [false, false, true, false, true, false, false],
-              ),
+              child: EditableAlarmCard(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AlarmCard(
-                accentColor: primaryPurple,
-                daysEnabled: [false, true, true, true, true, true, false],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AddAlarmCard(
-                onPressed: () {},
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 10.0),
+            //   child: AlarmCard(
+            //     time: TimeOfDay(hour: 1, minute:  5),
+            //     daysEnabled: [false, false, true, false, true, false, false],
+            //   ),
+            // ),
           ],
         ),
       ),

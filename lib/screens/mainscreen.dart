@@ -25,26 +25,32 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[];
   }
 
+  // Widget _buildAlarms(AppBloc bloc) {
+  //   return
+  // }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
     bloc.mainContext = context;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("ScanAwake"),
-        ),
+        // appBar: AppBar(
+        //   title: Text("ScanAwake"),
+        // ),
         body: SafeArea(
-          child: Container(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  bloc.numAlarms != 0
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              bloc.alarmsLoaded
+                  ? bloc.numAlarms != 0
                       ? Expanded(
                           child: new ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             itemCount: bloc.numAlarms,
                             itemBuilder: (BuildContext c, int index) {
                               Alarm current = bloc.alarms[index];
@@ -64,10 +70,10 @@ class _MainScreenState extends State<MainScreen> {
                                   minute: current.minute); // 3:00pm
                               return Dismissible(
                                 child: AlarmCard(
-                                  thisAlarm: current,
-                                  enabled: true,
-                                  daysEnabled: days,
-                                  time: alarmTime,
+                                  alarm: current,
+                            //      enabled: true,
+                            //      daysEnabled: days,
+                            //      time: alarmTime,
                                   accentColor: Colors.purple,
                                 ),
                                 key: ObjectKey(current.id),
@@ -80,26 +86,31 @@ class _MainScreenState extends State<MainScreen> {
                             },
                           ),
                         )
-                      : Text(""),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: AddAlarmCard(
-                      buttonColor: Colors.purple,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateBasicAlarm(bloc.mainContext)),
-                        );
-                      },
+                      : Container()
+                  : CircularProgressIndicator(
+                      strokeWidth: 5,
                     ),
-                  ),
-                ],
-              ),
-            ),
+              bloc.alarmsLoaded
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: AddAlarmCard(
+                        buttonColor: bloc.appColor,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateBasicAlarm(bloc.mainContext)),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }
 

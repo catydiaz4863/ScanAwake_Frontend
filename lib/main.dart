@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanawake/blocs/appbloc.dart';
+import 'package:scanawake/screens/EditAlarmScreen.dart';
 import 'package:scanawake/screens/create_basic_alarm.dart';
 import 'package:scanawake/screens/disable_alarm.dart';
 import 'package:scanawake/screens/loadingscreen.dart';
@@ -41,11 +42,10 @@ class MyApp extends StatelessWidget {
             );
           }
         },
-        showSemanticsDebugger: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0),
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.purple, // TODO: Create MaterialColor based on colorScheme so it matches app's colors...
         ),
         home: MainScreen(),
       ),
@@ -63,6 +63,7 @@ class SetupWidget extends StatefulWidget {
 class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
+    return TestScreen();
     // return CreateBasicAlarm();
 
     return MainScreen();
@@ -72,6 +73,8 @@ class _SetupWidgetState extends State<SetupWidget> {
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
 
-    return _buildScreen(bloc);
+    // Added Scaffold in main, so we can have a single scaffold layout for all...
+    // Could make background image easier to set.
+    return Scaffold(body: SafeArea(child: _buildScreen(bloc)));
   }
 }

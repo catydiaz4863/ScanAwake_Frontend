@@ -63,7 +63,7 @@ class SetupWidget extends StatefulWidget {
 class _SetupWidgetState extends State<SetupWidget> {
   Widget _buildScreen(AppBloc bloc) {
     /* Testing Componenets/Asset Purposes */
-    return TestScreen();
+    //return TestScreen();
     // return CreateBasicAlarm();
 
     return MainScreen();

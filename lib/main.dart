@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           appBarTheme: AppBarTheme(elevation: 0),
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.purple, // TODO: Create MaterialColor based on colorScheme so it matches app's colors...
         ),
         home: MainScreen(),
       ),

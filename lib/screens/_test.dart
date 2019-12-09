@@ -25,13 +25,13 @@ class TestScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.0),
               child: EditableAlarmCard(),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: AlarmCard(
-                time: TimeOfDay(hour: 1, minute:  5),
-                daysEnabled: [false, false, true, false, true, false, false],
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.symmetric(vertical: 10.0),
+            //   child: AlarmCard(
+            //     time: TimeOfDay(hour: 1, minute:  5),
+            //     daysEnabled: [false, false, true, false, true, false, false],
+            //   ),
+            // ),
           ],
         ),
       ),

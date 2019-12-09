@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:scanawake/blocs/appbloc.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
+import 'package:scanawake/models/alarm.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -20,24 +23,17 @@ import 'package:volume/volume.dart';
 /// EditableAlarmCard(enabled: true, daysEnabled: [false, true, true, true, true, true, false])
 /// ```
 class EditableAlarmCard extends StatefulWidget {
-  EditableAlarmCard(
-      {Key key,
-      this.alarmId,
-      this.vibrateSliderValue = 0.0,
-      this.volumeSliderValue = 0.0,
-      this.enabled = true,
-      this.time,
-      this.backgroundColor,
-      this.borderRadius = 30.0,
-      this.accentColor,
-      this.height,})
-      : super(key: key);
+  EditableAlarmCard({
+    Key key,
+    this.alarm,
+    this.backgroundColor,
+    this.borderRadius = 30.0,
+    this.height,
+  }) : super(key: key);
 
-  final bool enabled;
-  final TimeOfDay time;
-  final Color backgroundColor, accentColor;
-  final int alarmId;
-  final double height, borderRadius, vibrateSliderValue, volumeSliderValue;
+  final Alarm alarm;
+  final Color backgroundColor;
+  final double height, borderRadius;
 
   @override
   _EditableAlarmCardState createState() => _EditableAlarmCardState();
@@ -63,9 +59,9 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
     audioPlayer = AudioPlayer();
     playerCache = AudioCache();
-    _enabled = widget.enabled;
-    _time = widget.time == null ? new TimeOfDay.now() : widget.time;
-    _time_edit.add(_time.hour % 12 + 1);
+    _enabled = widget.alarm.enabled;
+    _time = TimeOfDay(hour: widget.alarm.hour, minute: widget.alarm.minute);
+    _time_edit.add(_time.hour % 12 + 1); // Why'd I do this?
     _time_edit
         .add(_time.minute < 10 ? 0 : int.parse(_time.minute.toString()[0]));
     _time_edit.add(_time.minute < 10
@@ -73,19 +69,16 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
         : int.parse(_time.minute.toString()[1]));
     _time_edit.add(_time.hour <= 12 ? 'AM' : 'PM');
     _mainView = true;
-    _vibrateSliderVal = widget.vibrateSliderValue;
-    _volumeSliderVal = widget.volumeSliderValue;
+    _vibrateSliderVal = widget.alarm.vibrationLevel;
+    _volumeSliderVal = widget.alarm.soundLevel;
     _isSoundPlaying = false;
     _updateTime = [false, false, false, false];
     _loopingTime = [false, false, false, false];
   }
 
   Future<void> initPlatformState() async {
-    print('essre');
-
     // audioplayer is currently using media/music. Android only...
     Volume.controlVolume(AudioManager.STREAM_MUSIC);
-    print('ettre');
 
     setState(() async {
       _maxVol = await Volume.getMaxVol;
@@ -533,9 +526,11 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
 
   @override
   Widget build(BuildContext context) {
+    AppBloc bloc = Provider.of<AppBloc>(context);
+
     double _scrWidth = MediaQuery.of(context).size.width;
     double _scrHeight = MediaQuery.of(context).size.height;
-    Color _accentColor = widget.accentColor ?? colorScheme[3];
+    Color _accentColor = bloc.appColor;
 
     return Container(
       decoration: BoxDecoration(

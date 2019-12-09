@@ -28,7 +28,6 @@ dependencies:
   audioplayers: ^0.12.1
   volume: ^0.1.0
   vibration: 1.2.2
-  flutter_launcher_icons: "^0.7.3"
   datetime_picker_formfield: ^0.4.3
   image_picker: ^0.6.1+4
   flutter_barcode_scanner: ^0.1.7

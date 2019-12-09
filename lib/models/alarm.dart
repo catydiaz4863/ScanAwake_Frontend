@@ -13,8 +13,8 @@ class Alarm {
   bool enabled;
   String audio;
   bool local = true;
-  int vibrationLevel = 0;
-  int soundLevel = 0;
+  double vibrationLevel = 0.0;
+  double soundLevel = 0.0;
   //Timer t;
 
   Alarm(

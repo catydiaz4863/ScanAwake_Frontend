@@ -17,32 +17,16 @@ import 'package:scanawake/screens/EditAlarmScreen.dart';
 class AlarmCard extends StatefulWidget {
   AlarmCard(
       {Key key,
-      this.alarmId,
-      this.enabled,
-      this.time,
-      this.daysEnabled = const [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
       this.backgroundColor,
       this.borderRadius = 30.0,
       this.accentColor,
       this.height,
-      this.thisAlarm})
+      this.alarm})
       : super(key: key);
 
-  Alarm thisAlarm;
-  final bool enabled;
-  final TimeOfDay time;
-  final List<bool> daysEnabled;
+  final Alarm alarm;
   final Color backgroundColor, accentColor;
   final double height, borderRadius;
-  final int alarmId;
 
   @override
   _AlarmCardState createState() => _AlarmCardState();
@@ -57,9 +41,13 @@ class _AlarmCardState extends State<AlarmCard> {
   void initState() {
     super.initState();
 
-    _enabled = widget.thisAlarm.enabled;
-    _time = widget.time == null ? new TimeOfDay.now() : widget.time;
-    _daysEnabled = widget.daysEnabled;
+    _enabled = widget.alarm.enabled;
+    _time = new TimeOfDay(hour: widget.alarm.hour, minute: widget.alarm.minute);
+
+    List<bool> daysEnabled = [false, false, false, false, false, false, false];
+    daysEnabled[dayToRelativeRange(widget.alarm.day)] = true;
+    _daysEnabled = daysEnabled;
+
     _mainView = true;
   }
 
@@ -143,9 +131,11 @@ class _AlarmCardState extends State<AlarmCard> {
           scale: 1.3,
           child: Switch(
             onChanged: (v) {
-       //       bloc.toggleAlarm(widget.thisAlarm);
+              // TODO: Fix toggle!
+              bloc.toggleAlarm(widget.alarm);
+
               setState(() {
-                _enabled = widget.thisAlarm.enabled;
+                _enabled = widget.alarm.enabled;
               });
             },
             value: _enabled,
@@ -172,7 +162,7 @@ class _AlarmCardState extends State<AlarmCard> {
               context,
               MaterialPageRoute(
                   builder: (context) => EditAlarmScreen(
-                        alarmId: widget.alarmId,
+                        alarm: widget.alarm,
                       )));
         },
         child: Container(

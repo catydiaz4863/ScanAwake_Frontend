@@ -25,6 +25,32 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[];
   }
 
+  Widget _buildAlarms(AppBloc bloc) {
+    if (bloc.alarmsLoaded) {
+      return bloc.numAlarms != 0
+          ? Expanded(
+              child: new ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: bloc.numAlarms,
+                itemBuilder: (BuildContext c, int index) {
+                  Alarm current = bloc.alarms[index];
+                  return Padding(
+                      padding: EdgeInsets.only(bottom: 5, top: 10),
+                      child: AlarmCard(
+                        alarm: current,
+                        accentColor: bloc.appColor,
+                      ));
+                },
+              ),
+            )
+          : Container();
+    } else {
+      return CircularProgressIndicator(
+        strokeWidth: 5,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
@@ -42,54 +68,23 @@ class _MainScreenState extends State<MainScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  bloc.numAlarms != 0
-                      ? Expanded(
-                          child: new ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            itemCount: bloc.numAlarms,
-                            itemBuilder: (BuildContext c, int index) {
-                              Alarm current = bloc.alarms[index];
-
-                              List<bool> days = [
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false
-                              ];
-
-                              days[current.day - 1] = true;
-                              TimeOfDay alarmTime = TimeOfDay(
-                                  hour: current.hour - 1,
-                                  minute: current.minute); // 3:00pm
-
-                              return AlarmCard(
-                                thisAlarm: current,
-                                enabled: true,
-                                daysEnabled: days,
-                                time: alarmTime,
-                                accentColor: Colors.purple,
+                  _buildAlarms(bloc),
+                  bloc.alarmsLoaded
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: AddAlarmCard(
+                            buttonColor: bloc.appColor,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateBasicAlarm(bloc.mainContext)),
                               );
                             },
                           ),
                         )
-                      : Text(""),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: AddAlarmCard(
-                      buttonColor: Colors.purple,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateBasicAlarm(bloc.mainContext)),
-                        );
-                      },
-                    ),
-                  ),
+                      : Container(),
                 ],
               ),
             ),

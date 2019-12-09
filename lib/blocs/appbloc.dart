@@ -88,7 +88,7 @@ class AppBloc extends ChangeNotifier {
     timers.remove(timerIndex);
     notifyListeners();
     */
-    
+
     if (a.local)
       localPlayer.stop();
     else
@@ -110,6 +110,27 @@ class AppBloc extends ChangeNotifier {
       timers[toggleID] = createTimer(a);
       a.enabled = true;
     }
+
+    notifyListeners();
+  }
+
+  void deleteAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    /*  if (a.enabled) {
+      int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+      print("timer index = $timerIndex");
+      timerIDs.remove(a.id);
+      timers[timerIndex].cancel();
+      timers.remove(timerIndex);
+      a.enabled = false;
+    } */
+
+    prefs.remove('${a.id}');
+    alarms.remove(a);
+    numAlarms--;
+
+    print("alarm deleted");
 
     notifyListeners();
   }

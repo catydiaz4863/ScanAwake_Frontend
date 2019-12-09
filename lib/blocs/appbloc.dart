@@ -46,8 +46,8 @@ class AppBloc extends ChangeNotifier {
   void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int savedNum = prefs.getInt('numAlarms');
-//    prefs.clear();
-    if (savedNum != 0 && savedNum != null) {
+    prefs.clear();
+  /*  if (savedNum != 0 && savedNum != null) {
       numAlarms = savedNum;
 
       for (int i = 0; i < savedNum; i++) {
@@ -57,7 +57,7 @@ class AppBloc extends ChangeNotifier {
         timers.add(createTimer(newAlarm));
         timerIDs.add(newAlarm.id);
       }
-    }
+    }*/
   }
 
   void ring(Alarm a) async {
@@ -79,7 +79,7 @@ class AppBloc extends ChangeNotifier {
     print("turning off alarm");
 
     // temporary - makes alarm one-time-only
-    /*
+    
     prefs.remove('${a.id}');
     alarms.remove(a);
     numAlarms--;
@@ -87,7 +87,7 @@ class AppBloc extends ChangeNotifier {
     timerIDs.remove(a.id);
     timers.remove(timerIndex);
     notifyListeners();
-    */
+    
 
     if (a.local)
       localPlayer.stop();

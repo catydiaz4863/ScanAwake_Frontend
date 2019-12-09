@@ -48,6 +48,10 @@ class _MainScreenState extends State<MainScreen> {
                             itemCount: bloc.numAlarms,
                             itemBuilder: (BuildContext c, int index) {
                               Alarm current = bloc.alarms[index];
+                                DateTime now = new DateTime.now();
+
+                              DateTime alarmDate = new DateTime(now.year, now.month, current.day);
+                              int weekday = alarmDate.weekday;
 
                               List<bool> days = [
                                 false,
@@ -58,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
                                 false,
                                 false
                               ];
-                              days[current.day - 1] = true;
+                              days[weekday - 1] = true;
                               TimeOfDay alarmTime = TimeOfDay(
                                   hour: current.hour - 1,
                                   minute: current.minute); // 3:00pm

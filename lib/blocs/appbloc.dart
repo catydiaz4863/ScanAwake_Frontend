@@ -136,7 +136,7 @@ class AppBloc extends ChangeNotifier {
     Duration difference = getDifference(a.hour, a.minute, a.day);
     print("");
     print("Setting timer for ${a.hour}:${a.minute}");
-    ;
+    
     print("");
     return Timer(Duration(seconds: difference.inSeconds), () {
       print("Ring ring ${a.hour}: ${a.minute}");

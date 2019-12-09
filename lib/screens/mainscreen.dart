@@ -25,31 +25,9 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[];
   }
 
-  Widget _buildAlarms(AppBloc bloc) {
-    if (bloc.alarmsLoaded) {
-      return bloc.numAlarms != 0
-          ? Expanded(
-              child: new ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount: bloc.numAlarms,
-                itemBuilder: (BuildContext c, int index) {
-                  Alarm current = bloc.alarms[index];
-                  return Padding(
-                      padding: EdgeInsets.only(bottom: 5, top: 10),
-                      child: AlarmCard(
-                        alarm: current,
-                        accentColor: bloc.appColor,
-                      ));
-                },
-              ),
-            )
-          : Container();
-    } else {
-      return CircularProgressIndicator(
-        strokeWidth: 5,
-      );
-    }
-  }
+  // Widget _buildAlarms(AppBloc bloc) {
+  //   return
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +46,27 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              _buildAlarms(bloc),
+              bloc.alarmsLoaded
+                  ? bloc.numAlarms != 0
+                      ? Expanded(
+                          child: new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: bloc.numAlarms,
+                            itemBuilder: (BuildContext c, int index) {
+                              Alarm current = bloc.alarms[index];
+                              return Padding(
+                                  padding: EdgeInsets.only(bottom: 5, top: 10),
+                                  child: AlarmCard(
+                                    alarm: current,
+                                    accentColor: bloc.appColor,
+                                  ));
+                            },
+                          ),
+                        )
+                      : Container()
+                  : CircularProgressIndicator(
+                      strokeWidth: 5,
+                    ),
               bloc.alarmsLoaded
                   ? Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),

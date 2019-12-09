@@ -116,6 +116,7 @@ class _AlarmCardState extends State<AlarmCard> {
 
   Widget timeSection(Color color) {
     int _hourString = _time.hour % 12 + 1;
+    print('timesection hour: ${_hourString}');
     AppBloc bloc = Provider.of<AppBloc>(context);
 
     return Row(

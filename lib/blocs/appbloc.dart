@@ -46,8 +46,8 @@ class AppBloc extends ChangeNotifier {
   void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int savedNum = prefs.getInt('numAlarms');
-//    prefs.clear();
-    if (savedNum != 0 && savedNum != null) {
+ //   prefs.clear();
+      if (savedNum != 0 && savedNum != null) {
       numAlarms = savedNum;
 
       for (int i = 0; i < savedNum; i++) {
@@ -90,6 +90,7 @@ class AppBloc extends ChangeNotifier {
     int timerIndex = timerIDs.indexWhere((id) => id == a.id);
     timerIDs.remove(a.id);
     timers.remove(timerIndex);
+   // createTimer(a);
     notifyListeners();
   }
 
@@ -108,6 +109,27 @@ class AppBloc extends ChangeNotifier {
       timers[toggleID] = createTimer(a);
       a.enabled = true;
     }
+
+    notifyListeners();
+  }
+
+  void deleteAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  /*  if (a.enabled) {
+      int timerIndex = timerIDs.indexWhere((id) => id == a.id);
+      print("timer index = $timerIndex");
+      timerIDs.remove(a.id);
+      timers[timerIndex].cancel();
+      timers.remove(timerIndex);
+      a.enabled = false;
+    } */
+
+    prefs.remove('${a.id}');
+    alarms.remove(a);
+    numAlarms--;
+
+    print("alarm deleted");
 
     notifyListeners();
   }

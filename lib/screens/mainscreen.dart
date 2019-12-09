@@ -62,13 +62,20 @@ class _MainScreenState extends State<MainScreen> {
                               TimeOfDay alarmTime = TimeOfDay(
                                   hour: current.hour - 1,
                                   minute: current.minute); // 3:00pm
-
-                              return AlarmCard(
-                                thisAlarm: current,
-                                enabled: true,
-                                daysEnabled: days,
-                                time: alarmTime,
-                                accentColor: Colors.purple,
+                              return Dismissible(
+                                child: AlarmCard(
+                                  thisAlarm: current,
+                                  enabled: true,
+                                  daysEnabled: days,
+                                  time: alarmTime,
+                                  accentColor: Colors.purple,
+                                ),
+                                key: ObjectKey(current.id),
+                                background: stackBehindDismiss(),
+                                onDismissed: (direction) {
+                                  bloc.deleteAlarm(current);
+                                  setState(() {});
+                                },
                               );
                             },
                           ),
@@ -94,4 +101,16 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ));
   }
+}
+
+Widget stackBehindDismiss() {
+  return Container(
+    alignment: Alignment.centerRight,
+    padding: EdgeInsets.only(right: 20.0),
+    color: Colors.red,
+    child: Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
 }

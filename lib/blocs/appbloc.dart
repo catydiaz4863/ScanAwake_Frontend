@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:scanawake/consts.dart';
 import 'package:scanawake/models/alarm.dart';
 import 'package:scanawake/screens/disable_alarm.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AppBloc extends ChangeNotifier {
-  bool isReady = false;
+  bool alarmsLoaded = false;
   int numAlarms = 0;
 
   AudioPlayer networkPlayer = AudioPlayer();
+  Color appColor = primaryPurple; // TODO:: Modify based on premium or not...
   static AudioCache localCache = AudioCache();
   AudioPlayer localPlayer;
   String chosenTitle = "default";
@@ -33,20 +35,21 @@ class AppBloc extends ChangeNotifier {
   BuildContext mainContext;
 
   AppBloc() {
-    //setup();
+    setup();
+  }
+
+  setup() async {
     alarms = [];
     localCache.load('mp3/alarm_clock.mp3');
 
     //load from saved stuff
-
     load();
-    notifyListeners();
   }
 
   void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int savedNum = prefs.getInt('numAlarms');
-//    prefs.clear();
+    // await prefs.clear();
     if (savedNum != 0 && savedNum != null) {
       numAlarms = savedNum;
 
@@ -58,6 +61,9 @@ class AppBloc extends ChangeNotifier {
         timerIDs.add(newAlarm.id);
       }
     }
+
+    alarmsLoaded = true;
+    notifyListeners();
   }
 
   void ring(Alarm a) async {
@@ -130,7 +136,7 @@ class AppBloc extends ChangeNotifier {
     Duration difference = getDifference(a.hour, a.minute, a.day);
     print("");
     print("Setting timer for ${a.hour}:${a.minute}");
-    ;
+    
     print("");
     return Timer(Duration(seconds: difference.inSeconds), () {
       print("Ring ring ${a.hour}: ${a.minute}");
@@ -142,8 +148,32 @@ class AppBloc extends ChangeNotifier {
     });
   }
 
+  // Passes alarm which edits the alarm based on its id.
+  Future editAlarm(Alarm a) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // id? or id - 1?
+    alarms[a.id] = a;
+
+    print('Edit: ${alarms[a.id].hour}:${alarms[a.id].minute}');
+
+    print('---alarms---');
+    for(int i = 0; i < alarms.length; ++i) {
+      print('${alarms[i].hour}:${alarms[i].minute}');
+    }
+
+    Map<String, dynamic> jsonAlarm = a.toJson();
+
+    prefs.setString("${a.id}", json.encode(jsonAlarm));
+
+    notifyListeners();
+  }
+
   Future addAlarm(Alarm a) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    a.soundLevel = a.soundLevel ?? 0.0;
+    a.vibrationLevel = a.vibrationLevel ?? 0.0;
+    a.hour = a.hour - 1 % 12;
 
     alarms.add(a);
     numAlarms++;

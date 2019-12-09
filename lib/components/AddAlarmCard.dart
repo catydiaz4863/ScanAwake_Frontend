@@ -28,7 +28,7 @@ class AddAlarmCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double _scrWidth = MediaQuery.of(context).size.width;
     double _scrHeight = MediaQuery.of(context).size.height;
-    double _bound = 132/323;
+    double _bound = 75/323;
     Color _buttonColor = buttonColor ?? colorScheme[3];
 
     return Container(

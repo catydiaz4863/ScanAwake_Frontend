@@ -5,6 +5,7 @@ import 'package:scanawake/blocs/appbloc.dart';
 import 'package:scanawake/components/Seperator.dart';
 import 'package:scanawake/consts.dart';
 import 'package:scanawake/models/alarm.dart';
+import 'package:scanawake/screens/EditAlarmScreen.dart';
 
 // NOTE: Currently, days are passed in/read as [true, true, false, false, false, true, false] ([Sunday, Monday, Tusday, Wednesday, Thursday, Friday, Saturday])
 
@@ -16,29 +17,14 @@ import 'package:scanawake/models/alarm.dart';
 class AlarmCard extends StatefulWidget {
   AlarmCard(
       {Key key,
-      this.alarmId,
-      this.enabled,
-      this.time,
-      this.daysEnabled = const [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
       this.backgroundColor,
       this.borderRadius = 30.0,
       this.accentColor,
       this.height,
-      this.thisAlarm})
+      this.alarm})
       : super(key: key);
 
-  Alarm thisAlarm;
-  final bool enabled, alarmId;
-  final TimeOfDay time;
-  final List<bool> daysEnabled;
+  final Alarm alarm;
   final Color backgroundColor, accentColor;
   final double height, borderRadius;
 
@@ -55,9 +41,13 @@ class _AlarmCardState extends State<AlarmCard> {
   void initState() {
     super.initState();
 
-    _enabled = widget.thisAlarm.enabled;
-    _time = widget.time == null ? new TimeOfDay.now() : widget.time;
-    _daysEnabled = widget.daysEnabled;
+    _enabled = widget.alarm.enabled;
+    _time = new TimeOfDay(hour: widget.alarm.hour, minute: widget.alarm.minute);
+
+    List<bool> daysEnabled = [false, false, false, false, false, false, false];
+    daysEnabled[dayToRelativeRange(widget.alarm.day)] = true;
+    _daysEnabled = daysEnabled;
+
     _mainView = true;
   }
 
@@ -125,6 +115,8 @@ class _AlarmCardState extends State<AlarmCard> {
   }
 
   Widget timeSection(Color color) {
+    int _hourString = _time.hour % 12 + 1;
+    print('timesection hour: ${_hourString}');
     AppBloc bloc = Provider.of<AppBloc>(context);
 
     return Row(
@@ -132,7 +124,7 @@ class _AlarmCardState extends State<AlarmCard> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Text(
-          '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
+          '${(_hourString < 10) ? _hourString : (_hourString.toString()[0] + ' ' + _hourString.toString()[1])} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
           style: sectionText.apply(
               color: _enabled ? colorScheme[6] : _disabledGrey),
         ),
@@ -140,9 +132,11 @@ class _AlarmCardState extends State<AlarmCard> {
           scale: 1.3,
           child: Switch(
             onChanged: (v) {
-       //       bloc.toggleAlarm(widget.thisAlarm);
+              // TODO: Fix toggle!
+              bloc.toggleAlarm(widget.alarm);
+
               setState(() {
-                _enabled = widget.thisAlarm.enabled;
+                _enabled = widget.alarm.enabled;
               });
             },
             value: _enabled,
@@ -165,7 +159,12 @@ class _AlarmCardState extends State<AlarmCard> {
 
     return GestureDetector(
         onLongPress: () {
-          // TODO: Go to Main Edit screen.
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditAlarmScreen(
+                        alarm: widget.alarm,
+                      )));
         },
         child: Container(
           decoration: BoxDecoration(

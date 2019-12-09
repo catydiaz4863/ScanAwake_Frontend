@@ -43,5 +43,12 @@ List<Set> days = [
   {'W', 'Wednesday'},
   {'R', 'Thursday'},
   {'F', 'Friday'},
-  {'Sa', 'Saturday'}
+  {'Sa', 'Saturday'},
 ];
+
+int dayToRelativeRange(int day) {
+  DateTime now = new DateTime.now();
+  DateTime setThis = new DateTime(now.year, now.month, day);
+
+  return setThis.weekday;
+}

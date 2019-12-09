@@ -182,7 +182,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   minute: m,
                   enabled: true,
                   audio: "",
-                  local: true);
+                  local: true, vibrationLevel: 0.0, soundLevel: 0.0);
             } else {
               a = new Alarm(
                   id: newID,
@@ -192,7 +192,7 @@ class _CreateBasicAlarmState extends State<CreateBasicAlarm> {
                   minute: m,
                   enabled: true,
                   audio: "${bloc.chosenURL}",
-                  local: false);
+                  local: false, vibrationLevel: 0.0, soundLevel: 0.0);
             }
             bloc.addAlarm(a);
             print("alarm created");

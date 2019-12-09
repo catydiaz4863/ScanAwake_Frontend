@@ -25,73 +25,68 @@ class _MainScreenState extends State<MainScreen> {
     _widgetOptions = <Widget>[];
   }
 
+  // Widget _buildAlarms(AppBloc bloc) {
+  //   return
+  // }
+
   @override
   Widget build(BuildContext context) {
     AppBloc bloc = Provider.of<AppBloc>(context);
     bloc.mainContext = context;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("ScanAwake"),
-        ),
+        // appBar: AppBar(
+        //   title: Text("ScanAwake"),
+        // ),
         body: SafeArea(
-          child: Container(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 25),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  bloc.numAlarms != 0
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              bloc.alarmsLoaded
+                  ? bloc.numAlarms != 0
                       ? Expanded(
                           child: new ListView.builder(
+                            physics: BouncingScrollPhysics(),
                             itemCount: bloc.numAlarms,
                             itemBuilder: (BuildContext c, int index) {
                               Alarm current = bloc.alarms[index];
-
-                              List<bool> days = [
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false
-                              ];
-                              days[current.day - 1] = true;
-                              TimeOfDay alarmTime = TimeOfDay(
-                                  hour: current.hour - 1,
-                                  minute: current.minute); // 3:00pm
-
-                              return AlarmCard(
-                                thisAlarm: current,
-                                enabled: true,
-                                daysEnabled: days,
-                                time: alarmTime,
-                                accentColor: Colors.purple,
-                              );
+                              return Padding(
+                                  padding: EdgeInsets.only(bottom: 5, top: 10),
+                                  child: AlarmCard(
+                                    alarm: current,
+                                    accentColor: bloc.appColor,
+                                  ));
                             },
                           ),
                         )
-                      : Text(""),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: AddAlarmCard(
-                      buttonColor: Colors.purple,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CreateBasicAlarm(bloc.mainContext)),
-                        );
-                      },
+                      : Container()
+                  : CircularProgressIndicator(
+                      strokeWidth: 5,
                     ),
-                  ),
-                ],
-              ),
-            ),
+              bloc.alarmsLoaded
+                  ? Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: AddAlarmCard(
+                        buttonColor: bloc.appColor,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateBasicAlarm(bloc.mainContext)),
+                          );
+                        },
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }

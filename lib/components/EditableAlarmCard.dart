@@ -43,7 +43,7 @@ class EditableAlarmCard extends StatefulWidget {
 
 class _EditableAlarmCardState extends State<EditableAlarmCard> {
   bool _enabled, _mainView, _isSoundPlaying;
-  int _maxVol = 1, _initVol = 1;
+  int _maxVol, _initVol = 1;
   TimeOfDay _time;
   double _vibrateSliderVal, _volumeSliderVal;
   AudioPlayer audioPlayer;
@@ -84,9 +84,9 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
     // audioplayer is currently using media/music.
     Volume.controlVolume(AudioManager.STREAM_MUSIC);
 
-    setState(() async {
-      _maxVol = await Volume.getMaxVol;
-    });
+    // setState(() async {
+    //   _maxVol = await Volume.getMaxVol;
+    // });
   }
 
   vibrate() async {
@@ -209,7 +209,8 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
         });
       }
 
-      _alarm.hour = _alarm.hour > 12 ? (_timeEdit[0] + 12) : _timeEdit[0];
+      _alarm.hour =
+          _alarm.hour > 12 ? (_timeEdit[0] + 12 - 1) : _timeEdit[0] - 1;
       setState(() {});
       widget.onEdit(_alarm);
 
@@ -258,43 +259,101 @@ class _EditableAlarmCardState extends State<EditableAlarmCard> {
   }
 
   Widget volumeSection(Color color) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 5),
-      child: Column(
-        children: <Widget>[
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Volume',
-                    style: linkText.apply(
-                        color: _enabled ? colorScheme[6] : _disabledGrey),
-                  ))),
-          Container(
-              height: 37.5,
-              child: Slider(
-                min: 0.0,
-                max: _maxVol.toDouble(),
-                value: _volumeSliderVal,
-                activeColor: _enabled ? color : _disabledGrey,
-                inactiveColor: _disabledGrey.withOpacity(.25),
-                onChanged: _isSoundPlaying
-                    ? null
-                    : (v) async {
-                        setState(() {
-                          _volumeSliderVal = v;
-                        });
+    if (_maxVol == null) {
+      return FutureBuilder(
+        future: Volume.getMaxVol,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return CircularProgressIndicator();
+              break;
+            case ConnectionState.done:
+              _maxVol = snapshot.data;
 
-                        _alarm.soundLevel = v;
-                        widget.onEdit(_alarm);
-                        testVolume();
-                      },
-                divisions: _maxVol,
-              ))
-        ],
-      ),
-    );
+              return Container(
+                margin: EdgeInsets.only(bottom: 5),
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Volume',
+                              style: linkText.apply(
+                                  color: _enabled
+                                      ? colorScheme[6]
+                                      : _disabledGrey),
+                            ))),
+                    Container(
+                        height: 37.5,
+                        child: Slider(
+                          min: 0.0,
+                          max: _maxVol.toDouble(),
+                          value: _volumeSliderVal,
+                          activeColor: _enabled ? color : _disabledGrey,
+                          inactiveColor: _disabledGrey.withOpacity(.25),
+                          onChanged: _isSoundPlaying
+                              ? null
+                              : (v) async {
+                                  setState(() {
+                                    _volumeSliderVal = v;
+                                  });
+
+                                  _alarm.soundLevel = v;
+                                  widget.onEdit(_alarm);
+                                  testVolume();
+                                },
+                          divisions: _maxVol,
+                        ))
+                  ],
+                ),
+              );
+              break;
+            default:
+          }
+          return CircularProgressIndicator();
+        },
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.only(bottom: 5),
+        child: Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Volume',
+                      style: linkText.apply(
+                          color: _enabled ? colorScheme[6] : _disabledGrey),
+                    ))),
+            Container(
+                height: 37.5,
+                child: Slider(
+                  min: 0.0,
+                  max: _maxVol.toDouble(),
+                  value: _volumeSliderVal,
+                  activeColor: _enabled ? color : _disabledGrey,
+                  inactiveColor: _disabledGrey.withOpacity(.25),
+                  onChanged: _isSoundPlaying
+                      ? null
+                      : (v) async {
+                          setState(() {
+                            _volumeSliderVal = v;
+                          });
+
+                          _alarm.soundLevel = v;
+                          widget.onEdit(_alarm);
+                          testVolume();
+                        },
+                  divisions: _maxVol,
+                ))
+          ],
+        ),
+      );
+    }
   }
 
   Widget timeSection(Color color) {

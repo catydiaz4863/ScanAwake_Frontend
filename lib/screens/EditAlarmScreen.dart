@@ -6,6 +6,7 @@ import 'package:scanawake/components/EditableAlarmCard.dart';
 import 'package:scanawake/components/RoundedButton.dart';
 import 'package:scanawake/consts.dart';
 import 'package:scanawake/models/alarm.dart';
+import 'package:scanawake/screens/mainscreen.dart';
 
 class EditAlarmScreen extends StatefulWidget {
   EditAlarmScreen({Key key, this.newAlarm: false, this.alarm})
@@ -235,12 +236,12 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                     borderRadius: 10,
                     buttonColor: bloc.appColor,
                     text: 'Save',
-                    onPressed: () {
+                    onPressed: () async {
                       if (widget.newAlarm) {
-                        // TODO: Edit alarm stored.
+                        // TODO: Create new alarm.
 
                       } else {
-                        // TODO: Create new alarm.
+                        // TODO: Edit alarm stored.
                         int newID = bloc.numAlarms;
                         // Alarm a = new Alarm(
                         //     id: newID,
@@ -253,12 +254,11 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                         //     local: bloc.chosenTitle == "default" ? true : false,
                         //     vibrationLevel: 0.0,
                         //     soundLevel: 0.0);
-                        bloc.editAlarm(_alarm);
+                        await bloc.editAlarm(_alarm);
                         print("alarm edited");
 
                         bloc.chosenURL = "";
                         bloc.chosenTitle = "default";
-                        setState(() {});
 
                         bloc.timerIDs.removeWhere((test) => test == _alarm.id);
                         bloc.timerIDs.add(_alarm.id);
@@ -266,7 +266,14 @@ class _EditAlarmScreenState extends State<EditAlarmScreen> {
                         // TODO: Edit the timers List
                         // bloc.timers.removeWhere((test) => test)
                         // bloc.timers.add(bloc.createTimer(a));
-                        Navigator.pop(context);
+
+                        setState(() {});
+
+                        // TODO: Navigator.pop(). Didn't do this due to popping not updating main screen. (Not sure why editAlarm doesn't notifyListeners...)
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                        );
                       }
                     },
                   ),

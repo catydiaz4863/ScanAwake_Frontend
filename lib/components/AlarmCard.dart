@@ -132,7 +132,7 @@ class _AlarmCardState extends State<AlarmCard> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Text(
-          '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} ${_time.hour > 12 ? 'PM' : 'AM'}',
+          '${_time.hour % 12 + 1} : ${_time.minute < 10 ? '0' : _time.minute.toString()[0]} ${_time.minute < 10 ? _time.minute.toString()[0] : _time.minute.toString()[1]} PM',
           style: sectionText.apply(
               color: _enabled ? colorScheme[6] : _disabledGrey),
         ),
